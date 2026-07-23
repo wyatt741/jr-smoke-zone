@@ -17,7 +17,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 """
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=6"
+CSSV = "styles.css?v=7"
 JSV  = "app.js?v=1"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
@@ -76,10 +76,11 @@ MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",
 # ---- contact ----
 PHONE     = "(805) 384-5115"                         # verified real number
 PHONE_TEL = "+18053845115"
-# FormSubmit endpoint. Keep LOWERCASE (playbook §7 - changing case forces re-activation).
-# TODO: jrsmokezone.com is not registered yet, so this inbox cannot receive the one-time
-# activation email -> the form is DEAD until swapped for a real, receivable address.
-FORM_TO   = "info@jrsmokezone.com"
+EMAIL     = "jrsmokezone@gmail.com"                  # real shop inbox (owner-supplied)
+# FormSubmit endpoint MUST stay lowercase (playbook §7 - changing the case forces
+# re-activation). The FIRST submission triggers a one-time activation email that the
+# owner has to click before any message actually gets delivered.
+FORM_TO   = EMAIL
 
 # hours: (day-label, hours). Real, from Yelp.
 HOURS = [("Mon", "9am - 9pm"), ("Tue", "9am - 9pm"), ("Wed", "9am - 9pm"),
@@ -242,6 +243,7 @@ def footer():
   <div class="foot-col"><h5>Visit</h5>
     <a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a>
     <a href="tel:{PHONE_TEL}">{PHONE}</a>
+    <a href="mailto:{EMAIL}">{EMAIL}</a>
     <span class="foot-note">{HOURS_SHORT}</span>
   </div>
 </div>
@@ -389,6 +391,7 @@ def visit():
       <h3>Call the shop</h3>
       <a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a>
       <p>Call or text during shop hours.</p>
+      <a class="v-mail" href="mailto:{EMAIL}">{EMAIL}</a>
     </div>
     <div class="vcard">
       <span class="ic-badge">{icon("store")}</span>
@@ -409,7 +412,7 @@ def visit():
       <label>Email<input name="email" type="email" required></label>
       <label>Message<textarea name="message" rows="5" placeholder="Your question..."></textarea></label>
       <button class="btn btn-primary btn-lg" type="submit">Send<span class="btn-ic">&rarr;</span></button>
-      <p class="form-fine">Form goes live once the shop email is connected (TODO).</p>
+      <p class="form-fine">Prefer to talk? Call or text {PHONE}.</p>
     </form>
   </aside>
 </div></section>

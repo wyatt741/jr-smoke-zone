@@ -238,7 +238,8 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .amen{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:.96rem}
 .amen-ic{width:34px;height:34px;flex-shrink:0;border-radius:10px;display:grid;place-items:center;background:var(--band);color:var(--accent-text)}
 .amen-ic .ic-svg{width:19px;height:19px}
-.v-ig{color:var(--accent-text);font-weight:600;font-size:.96rem}
+.v-ig,.v-mail{color:var(--accent-text);font-weight:600;font-size:.96rem}
+.v-mail{display:inline-block;margin-top:10px;word-break:break-all}
 /* message form */
 .visit-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);padding:30px;box-shadow:var(--shadow-soft);position:sticky;top:96px}
 .visit-form h3{font-size:1.3rem;margin-bottom:6px}
