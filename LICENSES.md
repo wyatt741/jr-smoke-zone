@@ -29,12 +29,17 @@ posts by other accounts that merely tagged the shop were discarded.
 
 Each gallery tile links back to its source post.
 
-### ⚠️ Before launch
-These are the shop's own images, used for the shop's own demo site — but the owner
-has **not yet explicitly signed off**. Two tiles feature partner businesses
-(JR Liquor Mart, P.S. Motorsports, Anderson Technologies, Beachside Motorsports).
-**Confirm with the owner**, and swap in owner-supplied hi-res originals when
-available (IG serves low-res; these are optimized to 720x900).
+### ✅ Owner sign-off — 2026-07-23
+The shop owner has **explicitly approved** use of these images on this site
+(confirmed to Wyatt, 2026-07-23). They are the shop's own published posts used for
+the shop's own site.
+
+Note for reference, not a blocker: two tiles are event flyers the shop published that
+also feature partner businesses (JR Liquor Mart, P.S. Motorsports, Anderson
+Technologies, Beachside Motorsports).
+
+Still worth doing: swap in owner-supplied **hi-res originals** when available.
+Instagram only serves low-res, so these are optimized to 720x900.
 
 ## Facts, not images
 Business facts (address, hours, amenities, product categories) verified from Yelp
