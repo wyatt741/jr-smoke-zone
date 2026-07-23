@@ -1,7 +1,8 @@
 # Image provenance & licensing
 
-Per playbook §4: real photos only, provenance recorded. **No stock/Pexels images are
-used on this site** — every asset is owner-sourced.
+Per playbook §4: provenance recorded for every image. Three sources are used here:
+the **owner's logo**, the **shop's own Instagram photos**, and **Pexels stock** for the
+product category imagery.
 
 ## Logo (owner-supplied)
 | File | Source | Notes |
@@ -45,3 +46,40 @@ Instagram only serves low-res, so these are optimized to 720x900.
 Business facts (address, hours, amenities, product categories) verified from Yelp
 2026-07-23. Carried brands (Puffco, Zig-Zag, RAW, Elf Bar) are stated by the shop in
 its own IG captions. Nothing invented.
+
+
+## Pexels stock (product category imagery)
+Added 2026-07-23 at Wyatt's request to fill out the Products page. All from
+[Pexels](https://www.pexels.com), used under the [Pexels License](https://www.pexels.com/license/)
+(free for commercial use, no attribution required, no resale of the unaltered image).
+Each was downloaded, cropped to 5:4 and re-encoded at q82 — none are hotlinked.
+
+| File | Pexels ID | Source |
+|------|-----------|--------|
+| `assets/products/vape.jpg` | 11587602 | https://www.pexels.com/photo/11587602/ |
+| `assets/products/hookah.jpg` | 7518765 | https://www.pexels.com/photo/7518765/ |
+| `assets/products/bong.jpg` | 8551077 | https://www.pexels.com/photo/8551077/ |
+| `assets/products/cigar.jpg` | 10343917 | https://www.pexels.com/photo/10343917/ |
+| `assets/products/papers.jpg` | 29474378 | https://www.pexels.com/photo/29474378/ |
+| `assets/products/gear.jpg` | 19901864 | https://www.pexels.com/photo/19901864/ |
+| `assets/products/apparel.jpg` | 581339 | https://www.pexels.com/photo/581339/ |
+
+**Glass Pipes deliberately uses the shop's OWN interior photo**
+(`assets/ig/Cj6NQc6goUQ.jpg`) rather than stock — it shows their actual product wall,
+which is the thing reviewers single out. Real beats stock where real exists.
+
+### Editorial rules applied when selecting
+1. **Product-first, no people smoking.** Lifestyle shots of people mid-smoke were rejected.
+2. **Nothing cannabis-implying.** Pexels results for "bong", "glass pipe" and "rolling
+   papers" are dominated by cannabis imagery. JR Smoke Zone is a tobacco/vape retailer,
+   not a dispensary, so every such image was rejected. The chosen water-pipe and papers
+   shots contain no cannabis.
+3. **Rejected a mis-tagged asset.** Pexels ID 6478094, titled "White and Red Glass Smoking
+   Pipe" in search results, actually resolves to a photo of **fishing lures**. Caught on
+   visual review and discarded.
+
+### ⚠️ Known nits for the owner
+- `vape.jpg` shows devices with a faintly visible **"Logic"** brand marking. Swap it if
+  the shop does not carry Logic.
+- These are **category/mood images, not the shop's actual inventory**. Replace with real
+  shop photos when available — that is strictly better and the layout takes them as-is.

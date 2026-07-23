@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=14"
+CSSV = "styles.css?v=15"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=5"
 
@@ -61,6 +61,8 @@ ICON = {
  "bike":   _svg('<circle cx="6" cy="16.5" r="3.5"/><circle cx="18" cy="16.5" r="3.5"/><path d="M6 16.5l4-8h5.5l-2.5 8M9.5 8.5H13"/>'),
  "phone":  _svg('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>'),
  "route":  _svg('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/>'),
+ "papers": _svg('<rect x="3.5" y="2.5" width="11" height="15" rx="2"/><path d="M7 6.5h4M7 10h4"/><path d="M7.5 21.5h11a2 2 0 0 0 2-2V7.5"/>'),
+ "shirt":  _svg('<path d="M20.4 3.5 16 2a4 4 0 0 1-8 0L3.6 3.5a2 2 0 0 0-1.3 2.2l.6 3.5a1 1 0 0 0 1 .8H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.1a1 1 0 0 0 1-.8l.6-3.5a2 2 0 0 0-1.3-2.2z"/>'),
  "ig":     _svg('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/>'),
  "heart":  _svg('<path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.5l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6z"/>'),
 }
@@ -114,30 +116,38 @@ HOURS_SHORT = " · ".join(f"{d} {h.replace(' - ', '-')}" for d, h in HOUR_ROWS)
 # product categories - all from their REAL Yelp list, no invented brands.
 # (icon, title, short[home], long[products page], items[generic product types, not brands])
 PRODUCTS = [
- ("vape",  "Vapes & E-Liquid",
+ ("vape",  "Vapes & E-Liquid", "assets/products/vape.jpg",
   "Devices, disposables, and a wall of e-liquid flavors.",
   "Vape devices, pods, and disposables, plus a big selection of e-liquid to match whatever you're after. New to it or dialing in a setup, the staff will point you the right way.",
   ["Vape devices & pods", "Disposables", "E-liquid & salts", "Coils & pods"]),
- ("hookah", "Hookah",
+ ("hookah", "Hookah", "assets/products/hookah.jpg",
   "Hookahs, shisha, and everything for the session.",
   "Full hookah setups and the shisha, hoses, bowls, and coals to go with them. Grab a whole kit or just restock the essentials.",
   ["Hookahs & kits", "Shisha / flavored tobacco", "Bowls & hoses", "Coals & accessories"]),
- ("pipe", "Glass Pipes",
+ ("pipe", "Glass Pipes", "assets/ig/Cj6NQc6goUQ.jpg",
   "A deep glass selection - the thing folks come back for.",
   "The glass wall is what regulars rave about. Hand pipes and glass in a range of styles and price points, from simple daily pieces to standout ones.",
   ["Hand pipes", "Chillums & one-hitters", "Colored & worked glass", "Everyday to premium"]),
- ("bong", "Bongs & Water Pipes",
+ ("bong", "Bongs & Water Pipes", "assets/products/bong.jpg",
   "Water pipes, beakers, rigs, and the parts to run them.",
   "Water pipes and rigs in glass and silicone, plus bowls, downstems, and the small parts that always seem to go missing.",
   ["Beakers & straight tubes", "Rigs", "Bowls & downstems", "Silicone & glass"]),
- ("cigar", "Cigars",
+ ("cigar", "Cigars", "assets/products/cigar.jpg",
   "Cigars and the smoking accessories to match.",
   "Cigars for the casual smoker and the aficionado, plus cutters, lighters, and the extras that round out the ritual.",
   ["Singles & selection", "Cutters & lighters", "Ashtrays", "Humidor accessories"]),
- ("gear", "Vape Accessories",
+ ("papers", "Rolling Papers & Trays", "assets/products/papers.jpg",
+  "Papers, wraps, tips, and trays to keep it tidy.",
+  "Rolling papers, wraps, tips, and trays, including the names people ask for by heart like RAW and Zig-Zag, plus the grinders that go with them.",
+  ["Papers & wraps", "Tips & filters", "Rolling trays", "Grinders"]),
+ ("gear", "Vape Accessories", "assets/products/gear.jpg",
   "Chargers, coils, grinders, trays, and all the extras.",
   "The catch-all wall: chargers, coils, grinders, trays, storage, cleaning supplies, and the odds and ends that keep everything running.",
   ["Chargers & batteries", "Grinders & trays", "Storage & cleaning", "Odds & ends"]),
+ ("shirt", "Apparel & Merch", "assets/products/apparel.jpg",
+  "Shirts, hats, and shop merch.",
+  "Shop apparel and merch, plus the occasional drop from the brands we carry. Ask what is on the rack.",
+  ["Tees & hoodies", "Hats", "Brand merch", "Shop drops"]),
 ]
 
 # why-visit features - grounded in REAL Yelp review sentiment (helpful/patient staff,
@@ -241,7 +251,7 @@ def chat_data():
          "maps": MAPS, "ig": IG, "hoursShort": HOURS_SHORT,
          "days": [{"d": a, "h": b} for a, b in HOURS],        # Mon..Sun, for "open now?"
          "hours": [{"d": a, "h": b} for a, b in HOUR_ROWS],   # grouped, for display
-         "products": [{"id": p[0], "title": p[1], "short": p[2]} for p in PRODUCTS],
+         "products": [{"id": p[0], "title": p[1], "short": p[3]} for p in PRODUCTS],
          "brands": BRANDS, "amenities": [t for _, t in AMENITIES]}
     return f"<script>window.JRZ={json.dumps(d, ensure_ascii=False)};</script>"
 
@@ -321,10 +331,12 @@ def footer():
 # ============================ PAGES ============================
 def home():
     # double-bezel: outer shell (.bezel) + inner core (.bezel-in), concentric radii
+    # last tile widens when the count would otherwise leave a hole in the 6-col grid
+    wide = " bento-wide" if (len(PRODUCTS) - 1) % 2 else ""
     prods = "".join(
-        f'''<a class="svc bezel" href="products.html#{p[0]}"><span class="bezel-in svc-in">
+        f'''<a class="svc bezel{wide if p is PRODUCTS[-1] else ""}" href="products.html#{p[0]}"><span class="bezel-in svc-in">
         <span class="ic-badge">{icon(p[0])}</span>
-        <span class="svc-copy"><h3>{p[1]}</h3><p>{p[2]}</p>
+        <span class="svc-copy"><h3>{p[1]}</h3><p>{p[3]}</p>
         <span class="svc-more">See more<span class="btn-ic">&rarr;</span></span></span></span></a>'''
         for p in PRODUCTS)
     feats = "".join(
@@ -403,11 +415,11 @@ def home():
 
 def products():
     rows = ""
-    for i, (ic, title, short, long, items) in enumerate(PRODUCTS):
+    for i, (ic, title, photo, short, long, items) in enumerate(PRODUCTS):
         li = "".join(f"<li>{x}</li>" for x in items)
         flip = " svc-row-flip" if i % 2 else ""
         rows += f'''<section class="section svc-row{flip}" id="{ic}"><div class="wrap svc-row-in">
-        <div class="svc-row-art reveal"><div class="art-panel"><span class="art-ic">{icon(ic)}</span></div></div>
+        <div class="svc-row-art reveal"><div class="art-photo bezel"><span class="bezel-in"><img src="{photo}" alt="{title} at {BIZ}" loading="lazy" width="900" height="720"></span></div></div>
         <div class="svc-row-copy reveal"><span class="ic-badge ic-badge-lg">{icon(ic)}</span><h2>{title}</h2>
         <p>{long}</p><ul class="ticks">{li}</ul>
         <a class="btn btn-primary cta-anim" href="visit.html">Come see it<span class="btn-ic">&rarr;</span></a></div>

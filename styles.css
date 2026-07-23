@@ -188,6 +188,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;grid-auto-rows:minmax(0,auto)}
 .bento>*:nth-child(1){grid-column:span 4;grid-row:span 2}
 .bento>*:nth-child(n+2){grid-column:span 2}
+.bento>.bento-wide{grid-column:span 4}
 .svc-in{padding:28px 26px 24px;display:flex;flex-direction:column}
 .svc-copy{display:block}
 .svc-more{align-self:flex-start}
@@ -223,6 +224,11 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .feat-in{padding:28px 24px}
 .feat h3{font-size:1.12rem;margin-bottom:6px}
 .feat p{color:var(--muted);font-size:.94rem}
+
+.art-photo{width:100%}
+.art-photo .bezel-in{aspect-ratio:5/4}
+.art-photo img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.32,.72,0,1)}
+.art-photo:hover img{transform:scale(1.04)}
 
 /* ---- shout-out card (real attributed quote, not a rating) ---- */
 .shout{max-width:740px;margin:6px auto 0}
