@@ -1,0 +1,438 @@
+#!/usr/bin/env python3
+"""JR Smoke Zone - static site generator (Camarillo, CA smoke & vape shop).
+Run:  python3 build.py   (emits index/products/visit + sitemap/robots)
+Edit CONTENT here, never hand-edit the generated HTML. Deploy = git push.
+
+Follows the site-template recipe (../site-template/PLAYBOOK.md): one generator,
+cache-busted assets, dark default + theme toggle, IntersectionObserver reveal
+motion, glass nav. Themed black/blue/gray from the owner's logo (--blue #67ade8
+sampled from the scorpion artwork). Product sections stay line-icon driven; real
+photos live in the Instagram gallery (see LICENSES.md for provenance).
+
+Non-negotiables baked in: 21+ age gate (age_gate() + app.js), FDA nicotine
+warning in the footer, NO fabricated ratings/reviews/stats (real Yelp rating
+is mixed), not e-commerce (CTAs are Visit / Directions / Call).
+
+Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
+"""
+
+# ---- cache-busting (bump on any css/js change) ----
+CSSV = "styles.css?v=6"
+JSV  = "app.js?v=1"
+
+# ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
+BOOT = ('<script>(function(){try{'
+        'var t=localStorage.getItem("theme")||"dark";'
+        'document.documentElement.setAttribute("data-theme",t);'
+        'if(localStorage.getItem("age21")==="1")document.documentElement.setAttribute("data-age","ok");'
+        '}catch(e){}})();</script>')
+SUN    = '<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg>'
+MOON   = '<svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>'
+TOGGLE = f'<button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle theme">{SUN}{MOON}</button>'
+
+# real logo assets (scorpion), generated from the owner's logo PDF into assets/
+# favicons cache HARD - bump ICOV and close the tab to see a change (playbook §5/§10)
+ICOV = "?v=1"
+MARK = "assets/mark.png"   # scorpion-only, for the nav/footer brand
+LOGO = "assets/logo.png"   # full logo, for the hero showcase
+
+# ---- ultra-light line icons (no emoji - premium feel per high-end-visual-design) ----
+def _svg(p):
+    return f'<svg class="ic-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{p}</svg>'
+ICON = {
+ # product categories
+ "vape":   _svg('<path d="M9 3h6M11 3v3M13 3v3"/><rect x="7" y="6" width="10" height="15" rx="3"/><path d="M10 11h4"/>'),
+ "hookah": _svg('<path d="M12 3v6M9 6h6"/><path d="M8 9h8l-1.2 4.2a2.9 2.9 0 0 1-5.6 0z"/><path d="M12 16v3M8.5 21h7"/>'),
+ "pipe":   _svg('<circle cx="7" cy="15" r="4"/><path d="M9.8 12.3 20 5.5"/>'),
+ "bong":   _svg('<path d="M10 3h4v4l3.2 6.4a4 4 0 0 1-3.6 5.8H10.4a4 4 0 0 1-3.6-5.8L10 7z"/><path d="M9 8h6"/>'),
+ "cigar":  _svg('<rect x="3" y="10" width="15" height="4" rx="2"/><path d="M18 11.2l2.2-1M18 12.8l2.2 1"/>'),
+ "gear":   _svg('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/>'),
+ # amenities / why-visit
+ "pin":    _svg('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/>'),
+ "store":  _svg('<path d="M3 9l1.2-5h15.6L21 9M4.5 9v11h15V9M4.5 9h15M9 20v-6h6v6"/>'),
+ "spark":  _svg('<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/>'),
+ "people": _svg('<circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0 1 11 0M15.5 5.6a3 3 0 0 1 0 5.8M20.5 20a5.5 5.5 0 0 0-3.2-5"/>'),
+ "clock":  _svg('<circle cx="12" cy="12" r="9"/><path d="M12 7v5.2l3.4 2"/>'),
+ "card":   _svg('<rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18M7 15h4"/>'),
+ "wheel":  _svg('<circle cx="13" cy="4.2" r="1.7"/><path d="M13 6v6h5l2.2 5M13 12a5.2 5.2 0 1 0 4.4 8"/>'),
+ "bike":   _svg('<circle cx="6" cy="16.5" r="3.5"/><circle cx="18" cy="16.5" r="3.5"/><path d="M6 16.5l4-8h5.5l-2.5 8M9.5 8.5H13"/>'),
+ "phone":  _svg('<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>'),
+ "route":  _svg('<circle cx="6" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8.5 6H15a3 3 0 0 1 0 6H9a3 3 0 0 0 0 6h6.5"/>'),
+ "ig":     _svg('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/>'),
+ "heart":  _svg('<path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.5l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6z"/>'),
+}
+def icon(name): return ICON.get(name, "")
+
+# ---- business facts (verified from Yelp 2026-07-23; do NOT fabricate anything else) ----
+BIZ    = "JR Smoke Zone"
+TAG    = "Camarillo's neighborhood smoke & vape shop"
+CITY   = "Camarillo, CA"
+ADDR   = "2616 Ventura Blvd, Camarillo, CA 93010"
+IG     = "https://www.instagram.com/jrsmokezone/"
+DOMAIN = "jrsmokezone.com"        # TODO: placeholder domain until owner registers/points one
+MAPS   = "https://www.google.com/maps/search/?api=1&query=" + ADDR.replace(" ", "+").replace(",", "%2C")
+MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",", "%2C") + "&output=embed"
+
+# ---- contact ----
+PHONE     = "(805) 384-5115"                         # verified real number
+PHONE_TEL = "+18053845115"
+# FormSubmit endpoint. Keep LOWERCASE (playbook §7 - changing case forces re-activation).
+# TODO: jrsmokezone.com is not registered yet, so this inbox cannot receive the one-time
+# activation email -> the form is DEAD until swapped for a real, receivable address.
+FORM_TO   = "info@jrsmokezone.com"
+
+# hours: (day-label, hours). Real, from Yelp.
+HOURS = [("Mon", "9am - 9pm"), ("Tue", "9am - 9pm"), ("Wed", "9am - 9pm"),
+         ("Thu", "9am - 9pm"), ("Fri", "9am - 9pm"), ("Sat", "9am - 9pm"),
+         ("Sun", "10am - 8pm")]
+HOURS_SHORT = "Mon-Sat 9am-9pm · Sun 10am-8pm"
+
+# product categories - all from their REAL Yelp list, no invented brands.
+# (icon, title, short[home], long[products page], items[generic product types, not brands])
+PRODUCTS = [
+ ("vape",  "Vapes & E-Liquid",
+  "Devices, disposables, and a wall of e-liquid flavors.",
+  "Vape devices, pods, and disposables, plus a big selection of e-liquid to match whatever you're after. New to it or dialing in a setup, the staff will point you the right way.",
+  ["Vape devices & pods", "Disposables", "E-liquid & salts", "Coils & pods"]),
+ ("hookah", "Hookah",
+  "Hookahs, shisha, and everything for the session.",
+  "Full hookah setups and the shisha, hoses, bowls, and coals to go with them. Grab a whole kit or just restock the essentials.",
+  ["Hookahs & kits", "Shisha / flavored tobacco", "Bowls & hoses", "Coals & accessories"]),
+ ("pipe", "Glass Pipes",
+  "A deep glass selection - the thing folks come back for.",
+  "The glass wall is what regulars rave about. Hand pipes and glass in a range of styles and price points, from simple daily pieces to standout ones.",
+  ["Hand pipes", "Chillums & one-hitters", "Colored & worked glass", "Everyday to premium"]),
+ ("bong", "Bongs & Water Pipes",
+  "Water pipes, beakers, rigs, and the parts to run them.",
+  "Water pipes and rigs in glass and silicone, plus bowls, downstems, and the small parts that always seem to go missing.",
+  ["Beakers & straight tubes", "Rigs", "Bowls & downstems", "Silicone & glass"]),
+ ("cigar", "Cigars",
+  "Cigars and the smoking accessories to match.",
+  "Cigars for the casual smoker and the aficionado, plus cutters, lighters, and the extras that round out the ritual.",
+  ["Singles & selection", "Cutters & lighters", "Ashtrays", "Humidor accessories"]),
+ ("gear", "Vape Accessories",
+  "Chargers, coils, grinders, trays, and all the extras.",
+  "The catch-all wall: chargers, coils, grinders, trays, storage, cleaning supplies, and the odds and ends that keep everything running.",
+  ["Chargers & batteries", "Grinders & trays", "Storage & cleaning", "Odds & ends"]),
+]
+
+# why-visit features - grounded in REAL Yelp review sentiment (helpful/patient staff,
+# glass selection) and verified facts. NO ratings, NO star claims, NO quoted reviews.
+FEATURES = [
+ ("store",  "Locally owned",
+  "A real neighborhood shop on Ventura Blvd, not a faceless chain or an online middleman."),
+ ("spark",  "Deep glass selection",
+  "Regulars single out the glass wall - a genuine range to actually pick from in person."),
+ ("people", "Helpful, patient staff",
+  "Ask anything. The team's happy to walk you through options whether you're new or know exactly what you want."),
+ ("gear",   "Everything in one spot",
+  "Vapes, hookah, glass, cigars, and accessories under one roof - one stop instead of five."),
+]
+
+# amenities (verified from Yelp)
+AMENITIES = [("wheel", "Wheelchair accessible"), ("card", "Accepts credit cards"),
+             ("bike", "Bike parking")]
+
+# brands the shop actually carries (stated in their own IG posts - real, not invented)
+BRANDS = ["Puffco", "Zig-Zag", "RAW", "Elf Bar"]
+
+# REAL public shout-out from a local business (IG post 2026-05-22), trimmed excerpt.
+# Not a customer review and not a rating - attributed + linked to the source post.
+SHOUTOUT = {"text": "Had to stop by and show love at the best smoke shop in the 805. "
+                    "The owner of that spot is rad! Good people.",
+            "who": "Beachside Motorsports", "handle": "@beachsidemotorsportsllc",
+            "post": "DYpgJ-AFIMM"}
+
+# real Instagram posts (@jrsmokezone), images downloaded to assets/ig/. (code, caption)
+# Mix of real interior shots + branded promos + community events, pulled 2026-07-23.
+GALLERY = [
+ ("Cj6NQc6goUQ", "Inside the shop"),
+ ("DQXqPwjEghY", "On the floor"),
+ ("DIfCAIIztcr", "4/20 deals"),
+ ("DR0OKh2Eupc", "Holiday giveaway"),
+ ("DSG21OwES8q", "In-store toy drive"),
+ ("DXQFTVrj8Bo", "4/20 celebration"),
+]
+IG_POST = "https://www.instagram.com/p/{}/"
+
+NAV = [("index.html", "Home"), ("products.html", "Products"), ("visit.html", "Visit")]
+
+# ============================ SHARED CHROME ============================
+def head(title, desc, page=""):
+    return f'''<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{title}</title><meta name="description" content="{desc}">
+<meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
+<meta property="og:type" content="website"><meta name="theme-color" content="#0a0d13">
+<link rel="icon" href="assets/favicon.ico{ICOV}" sizes="any">
+<link rel="icon" type="image/png" href="assets/favicon.png{ICOV}">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png{ICOV}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{CSSV}">
+{BOOT}
+</head><body class="{page}">
+{age_gate()}
+<a class="skip" href="#main">Skip to content</a>'''
+
+def brandmark(cls=""):
+    return (f'<a class="brand {cls}" href="index.html" aria-label="{BIZ} home">'
+            f'<img class="brand-ic" src="{MARK}" alt="" width="36" height="36">'
+            f'<span class="wordmark"><span class="wm-jr">JR.</span> Smoke Zone</span></a>')
+
+def nav(active):
+    links = "".join(
+        f'<a href="{h}"{" class=\"active\"" if h==active else ""}>{t}</a>' for h, t in NAV)
+    mlinks = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
+    return f'''<div class="nav-shell"><header class="nav"><div class="nav-in">
+  {brandmark()}
+  <nav class="nav-links">{links}</nav>
+  {TOGGLE}
+  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a>
+  <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+</div></header></div>
+<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
+
+def age_gate():
+    # 21+ splash. Shown before paint unless localStorage age21=1 (set in BOOT -> data-age="ok").
+    # "Yes" persists + reveals; "No" leaves the site. Wired in app.js.
+    return f'''<div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="ag-title">
+  <div class="ag-card">
+    <img class="ag-logo" src="{LOGO}" alt="{BIZ}" width="200" height="200">
+    <h2 id="ag-title">Are you 21 or older?</h2>
+    <p>You must be at least 21 years of age to enter this site. Tobacco and vapor products are for adults 21+ only.</p>
+    <div class="ag-btns">
+      <button class="btn btn-primary btn-lg" id="ag-yes" type="button">Yes, I'm 21+</button>
+      <button class="btn btn-ghost btn-lg" id="ag-no" type="button">No</button>
+    </div>
+    <p class="ag-fine">By entering you confirm you are of legal age to purchase tobacco and vapor products in California.</p>
+  </div>
+</div>'''
+
+def visit_cta():
+    return f'''<section class="cta-band"><div class="wrap"><div class="cta-card reveal">
+  <div class="cta-copy">
+    <span class="eyebrow eyebrow-light">Come see us</span>
+    <h2>Swing by the shop.</h2>
+    <p>{ADDR}. Open {HOURS_SHORT}. Questions? The staff's got you.</p>
+  </div>
+  <div class="cta-btns">
+    <a class="btn btn-glow btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
+    <a class="btn btn-ghost-light btn-lg" href="tel:{PHONE_TEL}">Call the shop</a>
+  </div>
+</div></div></section>'''
+
+def footer():
+    cols = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
+    return f'''<footer>
+<div class="wrap warn-bar">
+  <strong>WARNING:</strong> This product contains nicotine. Nicotine is an addictive chemical.
+  <span class="warn-age">Must be 21+ to purchase.</span>
+</div>
+<div class="wrap foot-grid">
+  <div class="foot-brand">
+    {brandmark("brand-foot")}
+    <p>A locally owned smoke &amp; vape shop in {CITY}. Vapes, hookah, glass, cigars, and accessories, all in one spot.</p>
+    <div class="foot-social">
+      <a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+    </div>
+  </div>
+  <div class="foot-col"><h5>Explore</h5>{cols}</div>
+  <div class="foot-col"><h5>Visit</h5>
+    <a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a>
+    <a href="tel:{PHONE_TEL}">{PHONE}</a>
+    <span class="foot-note">{HOURS_SHORT}</span>
+  </div>
+</div>
+<div class="legal wrap">
+  <span>&copy; 2026 {BIZ}. All rights reserved.</span>
+  <span>Not for sale to minors. 21+ only.</span>
+</div>
+</footer>
+<script src="{JSV}"></script></body></html>'''
+
+# ============================ PAGES ============================
+def home():
+    prods = "".join(
+        f'''<a class="svc" href="products.html#{p[0]}">
+        <span class="ic-badge">{icon(p[0])}</span><h3>{p[1]}</h3><p>{p[2]}</p>
+        <span class="svc-more">See more<span class="btn-ic">&rarr;</span></span></a>'''
+        for p in PRODUCTS)
+    feats = "".join(
+        f'<div class="feat"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div>'
+        for k, t, d in FEATURES)
+    # marquee: product keywords + real carried brands, rendered twice for a seamless loop
+    chips = ["Vapes", "E-Liquid", "Disposables", "Hookah", "Shisha", "Glass Pipes",
+             "Bongs", "Puffco", "Zig-Zag", "RAW", "Elf Bar", "Cigars", "Grinders", "Accessories"]
+    row = "".join(f'<span class="mq-chip">{c}</span>' for c in chips)
+    marquee = row + row
+    igtiles = "".join(
+        f'''<a class="ig-tile" href="{IG_POST.format(code)}" target="_blank" rel="noopener">
+        <img src="assets/ig/{code}.jpg" alt="{label} at {BIZ}" loading="lazy">
+        <span class="ig-cap">{label}{icon("ig")}</span></a>''' for code, label in GALLERY)
+    return head(f"{BIZ} | {TAG}",
+        f"Locally owned smoke & vape shop in {CITY}. Vapes, e-liquid, hookah, glass pipes, bongs, cigars, and accessories. Come visit us on Ventura Blvd.",
+        "home") + nav("index.html") + f'''
+<main id="main">
+<section class="hero"><div class="wrap hero-in">
+  <div class="hero-copy reveal">
+    <span class="eyebrow"><span class="dot"></span>Locally owned · {CITY}</span>
+    <h1>Your neighborhood <span class="hl">smoke &amp; vape</span> shop.</h1>
+    <p>{BIZ} is a locally owned spot on Ventura Blvd for vapes and e-liquid, hookah, glass, bongs, cigars, and accessories. Come in and the staff will sort you out.</p>
+    <div class="hero-btns">
+      <a class="btn btn-primary btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
+      <a class="btn btn-ghost btn-lg" href="products.html">Browse products</a>
+    </div>
+  </div>
+  <aside class="hero-logo reveal d1">
+    <div class="logo-tile"><img src="{LOGO}" alt="{BIZ} logo" width="520" height="520"></div>
+    <div class="logo-facts">
+      <span class="lf-open"><span class="hc-dot"></span>Open 7 days on Ventura Blvd</span>
+      <span>{HOURS_SHORT}</span>
+    </div>
+  </aside>
+</div></section>
+
+<section class="marquee-sec"><div class="wrap marquee-in">
+  <span class="marquee-label">In store</span>
+  <div class="marquee"><div class="marquee-track">{marquee}</div></div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">What we carry</span>
+    <h2>One shop, all of it</h2>
+    <p>From a fresh coil to a standout piece of glass, it's on the wall in {CITY.split(",")[0]}.</p></div>
+  <div class="svc-grid stagger reveal">{prods}</div>
+</div></section>
+
+<section class="section band"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">Why visit us</span><h2>A local shop that does it right</h2></div>
+  <div class="feat-grid stagger reveal">{feats}</div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">From the shop</span><h2>Straight off the feed</h2>
+    <p>Real shots from inside the store, plus the deals, giveaways, and events we run for the neighborhood.</p></div>
+  <div class="ig-grid stagger reveal">{igtiles}</div>
+  <div class="center" style="margin-top:34px"><a class="btn btn-primary btn-lg cta-anim" href="{IG}" target="_blank" rel="noopener">Follow &#64;jrsmokezone{icon("ig")}</a></div>
+</div></section>
+
+<section class="section band"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">More than a smoke shop</span><h2>Part of the neighborhood</h2>
+    <p>JR Smoke Zone runs in-store toy drives, 4/20 events, and giveaways with local businesses, right next to our sister store JR Liquor Mart on Ventura Blvd.</p></div>
+  <figure class="shout reveal">
+    <blockquote>&ldquo;{SHOUTOUT["text"]}&rdquo;</blockquote>
+    <figcaption>
+      <span class="shout-who">{SHOUTOUT["who"]}</span>
+      <a href="{IG_POST.format(SHOUTOUT["post"])}" target="_blank" rel="noopener">{SHOUTOUT["handle"]}{icon("ig")}</a>
+    </figcaption>
+  </figure>
+</div></section>
+</main>
+{visit_cta()}{footer()}'''
+
+def products():
+    rows = ""
+    for i, (ic, title, short, long, items) in enumerate(PRODUCTS):
+        li = "".join(f"<li>{x}</li>" for x in items)
+        flip = " svc-row-flip" if i % 2 else ""
+        rows += f'''<section class="section svc-row{flip}" id="{ic}"><div class="wrap svc-row-in">
+        <div class="svc-row-art reveal"><div class="art-panel"><span class="art-ic">{icon(ic)}</span></div></div>
+        <div class="svc-row-copy reveal"><span class="ic-badge ic-badge-lg">{icon(ic)}</span><h2>{title}</h2>
+        <p>{long}</p><ul class="ticks">{li}</ul>
+        <a class="btn btn-primary cta-anim" href="visit.html">Come see it<span class="btn-ic">&rarr;</span></a></div>
+      </div></section>'''
+    return head(f"Products | {BIZ}",
+        f"Vapes and e-liquid, hookah, glass pipes, bongs, cigars, and accessories at {BIZ} in {CITY}.",
+        "products") + nav("products.html") + f'''
+<main id="main">
+<section class="page-hero"><div class="wrap reveal">
+  <span class="eyebrow">Products</span><h1>What's on the wall</h1>
+  <p>Everything a locally owned smoke &amp; vape shop should have, under one roof in {CITY.split(",")[0]}. It's a brochure, not a store, so no online sales. Come in and see it in person.</p>
+</div></section>
+{rows}
+<section class="section band"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">Not sure what you need?</span><h2>Just come in and ask</h2>
+    <p>New to vaping, chasing a specific piece of glass, or restocking hookah supplies - tell the staff what you're after and they'll walk you through it.</p></div>
+  <div class="center reveal"><a class="btn btn-primary btn-lg cta-anim" href="visit.html">Plan your visit<span class="btn-ic">&rarr;</span></a></div>
+</div></section>
+</main>{visit_cta()}{footer()}'''
+
+def visit():
+    hrows = "".join(f'<div class="hr-row"><span>{d}</span><strong>{h}</strong></div>' for d, h in HOURS)
+    amen = "".join(f'<span class="amen"><span class="amen-ic">{icon(k)}</span>{t}</span>' for k, t in AMENITIES)
+    return head(f"Visit | {BIZ}",
+        f"Find {BIZ} at {ADDR}. Hours, directions, and how to reach us.",
+        "visit") + nav("visit.html") + f'''
+<main id="main">
+<section class="page-hero"><div class="wrap reveal">
+  <span class="eyebrow">Visit</span><h1>Come see us</h1>
+  <p>We're on Ventura Blvd in {CITY.split(",")[0]}, open seven days a week. Directions, hours, and a message form are all right here.</p>
+</div></section>
+
+<section class="section" style="padding-top:32px"><div class="wrap visit-in">
+  <div class="visit-info reveal">
+    <div class="vcard">
+      <span class="ic-badge">{icon("pin")}</span>
+      <h3>Address</h3>
+      <p>{ADDR}</p>
+      <a class="btn btn-primary cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
+    </div>
+    <div class="vcard">
+      <span class="ic-badge">{icon("clock")}</span>
+      <h3>Hours</h3>
+      <div class="hours">{hrows}</div>
+    </div>
+    <div class="vcard">
+      <span class="ic-badge">{icon("phone")}</span>
+      <h3>Call the shop</h3>
+      <a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a>
+      <p>Call or text during shop hours.</p>
+    </div>
+    <div class="vcard">
+      <span class="ic-badge">{icon("store")}</span>
+      <h3>Good to know</h3>
+      <div class="amenities">{amen}</div>
+      <a class="v-ig" href="{IG}" target="_blank" rel="noopener">Follow on Instagram &rarr;</a>
+    </div>
+  </div>
+
+  <aside class="visit-form reveal d1">
+    <h3>Send us a message</h3>
+    <p>Got a question about a product or hours? Drop us a line.</p>
+    <form class="cform" action="https://formsubmit.co/{FORM_TO}" method="POST">
+      <input type="hidden" name="_subject" value="New message from the JR Smoke Zone website">
+      <input type="hidden" name="_template" value="table">
+      <input type="text" name="_honey" style="display:none">
+      <label>Name<input name="name" required></label>
+      <label>Email<input name="email" type="email" required></label>
+      <label>Message<textarea name="message" rows="5" placeholder="Your question..."></textarea></label>
+      <button class="btn btn-primary btn-lg" type="submit">Send<span class="btn-ic">&rarr;</span></button>
+      <p class="form-fine">Form goes live once the shop email is connected (TODO).</p>
+    </form>
+  </aside>
+</div></section>
+
+<section class="map-sec"><iframe src="{MAP_EMBED}" title="{BIZ} location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></section>
+</main>{visit_cta()}{footer()}'''
+
+# ============================ BUILD ============================
+PAGES = {"index.html": home, "products.html": products, "visit.html": visit}
+
+def sitemap():
+    urls = "".join(f"<url><loc>https://{DOMAIN}/{p}</loc></url>" for p in PAGES)
+    return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
+
+def build():
+    for fn, f in PAGES.items():
+        with open(fn, "w", encoding="utf-8") as fh:
+            fh.write(f())
+    with open("sitemap.xml", "w", encoding="utf-8") as fh:
+        fh.write(sitemap())
+    with open("robots.txt", "w", encoding="utf-8") as fh:
+        fh.write(f"User-agent: *\nAllow: /\nSitemap: https://{DOMAIN}/sitemap.xml\n")
+    print("built:", ", ".join(PAGES), "+ sitemap.xml, robots.txt")
+
+if __name__ == "__main__":
+    build()
