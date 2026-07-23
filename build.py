@@ -16,9 +16,12 @@ is mixed), not e-commerce (CTAs are Visit / Directions / Call).
 Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 """
 
+import json
+
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=12"
+CSSV = "styles.css?v=13"
 JSV  = "app.js?v=1"
+CHATV= "chat.js?v=3"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -231,6 +234,44 @@ def age_gate():
   </div>
 </div>'''
 
+def chat_data():
+    """Feed the assistant the SAME constants the pages render, so it can never drift
+    from the site or invent a fact. No API key, no backend - see chat.js."""
+    d = {"biz": BIZ, "addr": ADDR, "phone": PHONE, "tel": PHONE_TEL, "email": EMAIL,
+         "maps": MAPS, "ig": IG, "hoursShort": HOURS_SHORT,
+         "days": [{"d": a, "h": b} for a, b in HOURS],        # Mon..Sun, for "open now?"
+         "hours": [{"d": a, "h": b} for a, b in HOUR_ROWS],   # grouped, for display
+         "products": [{"id": p[0], "title": p[1], "short": p[2]} for p in PRODUCTS],
+         "brands": BRANDS, "amenities": [t for _, t in AMENITIES]}
+    return f"<script>window.JRZ={json.dumps(d, ensure_ascii=False)};</script>"
+
+def chat_widget():
+    # Deterministic assistant: answers only from window.JRZ (real data). It never quotes
+    # prices or claims stock - those route to a phone call. No LLM, no key, no backend.
+    return f'''<div class="cw" id="cw">
+  <button class="cw-bubble" id="cw-bubble" type="button" aria-label="Ask a question" aria-expanded="false" aria-controls="cw-panel">
+    <svg class="cw-i cw-i-chat" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+    <svg class="cw-i cw-i-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="cw-panel" id="cw-panel" role="dialog" aria-labelledby="cw-title" hidden>
+    <div class="cw-head">
+      <img class="cw-avatar" src="{MARK}" alt="" width="34" height="34">
+      <div class="cw-head-t"><strong id="cw-title">{BIZ}</strong>
+        <span><span class="cw-dot"></span>Hours, directions, what we carry</span></div>
+      <button class="cw-x" id="cw-close" type="button" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="cw-log" id="cw-log" role="log" aria-live="polite" aria-label="Chat messages"></div>
+    <form class="cw-form" id="cw-form" autocomplete="off">
+      <label class="sr-only" for="cw-input">Type your question</label>
+      <input id="cw-input" class="cw-input" type="text" placeholder="Ask a question..." maxlength="300" autocomplete="off">
+      <button class="cw-send" type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </form>
+    <p class="cw-note">Automated assistant. For prices or stock, call the shop. 21+ only.</p>
+  </div>
+</div>'''
+
 def visit_cta():
     return f'''<section class="cta-band"><div class="wrap"><div class="cta-card reveal">
   <div class="cta-copy">
@@ -272,7 +313,10 @@ def footer():
   <span>Not for sale to minors. 21+ only.</span>
 </div>
 </footer>
-<script src="{JSV}"></script></body></html>'''
+{chat_widget()}
+{chat_data()}
+<script src="{JSV}"></script>
+<script src="{CHATV}"></script></body></html>'''
 
 # ============================ PAGES ============================
 def home():

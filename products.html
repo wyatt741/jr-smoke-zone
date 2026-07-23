@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=12">
+<link rel="stylesheet" href="styles.css?v=13">
 <script>(function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("age21")==="1")document.documentElement.setAttribute("data-age","ok");}catch(e){}})();</script>
 </head><body class="products">
 <div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="ag-title">
@@ -109,4 +109,29 @@
   <span>Not for sale to minors. 21+ only.</span>
 </div>
 </footer>
-<script src="app.js?v=1"></script></body></html>
+<div class="cw" id="cw">
+  <button class="cw-bubble" id="cw-bubble" type="button" aria-label="Ask a question" aria-expanded="false" aria-controls="cw-panel">
+    <svg class="cw-i cw-i-chat" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>
+    <svg class="cw-i cw-i-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <div class="cw-panel" id="cw-panel" role="dialog" aria-labelledby="cw-title" hidden>
+    <div class="cw-head">
+      <img class="cw-avatar" src="assets/mark.png" alt="" width="34" height="34">
+      <div class="cw-head-t"><strong id="cw-title">JR Smoke Zone</strong>
+        <span><span class="cw-dot"></span>Hours, directions, what we carry</span></div>
+      <button class="cw-x" id="cw-close" type="button" aria-label="Close chat">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    </div>
+    <div class="cw-log" id="cw-log" role="log" aria-live="polite" aria-label="Chat messages"></div>
+    <form class="cw-form" id="cw-form" autocomplete="off">
+      <label class="sr-only" for="cw-input">Type your question</label>
+      <input id="cw-input" class="cw-input" type="text" placeholder="Ask a question..." maxlength="300" autocomplete="off">
+      <button class="cw-send" type="submit" aria-label="Send">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </form>
+    <p class="cw-note">Automated assistant. For prices or stock, call the shop. 21+ only.</p>
+  </div>
+</div>
+<script>window.JRZ={"biz": "JR Smoke Zone", "addr": "2616 Ventura Blvd, Camarillo, CA 93010", "phone": "(805) 384-5115", "tel": "+18053845115", "email": "jrsmokezone@gmail.com", "maps": "https://www.google.com/maps/search/?api=1&query=2616+Ventura+Blvd%2C+Camarillo%2C+CA+93010", "ig": "https://www.instagram.com/jrsmokezone/", "hoursShort": "Mon-Sat 9am-9pm · Sun 10am-8pm", "days": [{"d": "Mon", "h": "9am - 9pm"}, {"d": "Tue", "h": "9am - 9pm"}, {"d": "Wed", "h": "9am - 9pm"}, {"d": "Thu", "h": "9am - 9pm"}, {"d": "Fri", "h": "9am - 9pm"}, {"d": "Sat", "h": "9am - 9pm"}, {"d": "Sun", "h": "10am - 8pm"}], "hours": [{"d": "Mon-Sat", "h": "9am - 9pm"}, {"d": "Sun", "h": "10am - 8pm"}], "products": [{"id": "vape", "title": "Vapes & E-Liquid", "short": "Devices, disposables, and a wall of e-liquid flavors."}, {"id": "hookah", "title": "Hookah", "short": "Hookahs, shisha, and everything for the session."}, {"id": "pipe", "title": "Glass Pipes", "short": "A deep glass selection - the thing folks come back for."}, {"id": "bong", "title": "Bongs & Water Pipes", "short": "Water pipes, beakers, rigs, and the parts to run them."}, {"id": "cigar", "title": "Cigars", "short": "Cigars and the smoking accessories to match."}, {"id": "gear", "title": "Vape Accessories", "short": "Chargers, coils, grinders, trays, and all the extras."}], "brands": ["Puffco", "Zig-Zag", "RAW", "Elf Bar"], "amenities": ["Wheelchair accessible", "Accepts credit cards", "Bike parking"]};</script>
+<script src="app.js?v=1"></script>
+<script src="chat.js?v=3"></script></body></html>
