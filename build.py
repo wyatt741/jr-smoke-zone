@@ -86,7 +86,27 @@ FORM_TO   = EMAIL
 HOURS = [("Mon", "9am - 9pm"), ("Tue", "9am - 9pm"), ("Wed", "9am - 9pm"),
          ("Thu", "9am - 9pm"), ("Fri", "9am - 9pm"), ("Sat", "9am - 9pm"),
          ("Sun", "10am - 8pm")]
-HOURS_SHORT = "Mon-Sat 9am-9pm · Sun 10am-8pm"
+
+def hour_rows(hours):
+    """Collapse consecutive days sharing the same hours into ranges: Mon-Sat 9am-9pm.
+    Generic, so changing HOURS above re-groups automatically (no hardcoded ranges)."""
+    runs = []
+    for day, hrs in hours:
+        if runs and runs[-1][2] == hrs:
+            runs[-1][1] = day                     # extend the current run
+        else:
+            runs.append([day, day, hrs])          # start a new run
+    return [(a if a == b else f"{a}-{b}", h) for a, b, h in runs]
+
+# self-check: the smallest thing that fails if the grouping logic breaks
+assert hour_rows(HOURS) == [("Mon-Sat", "9am - 9pm"), ("Sun", "10am - 8pm")]
+assert hour_rows([("Mon", "9-5")]) == [("Mon", "9-5")]                       # single day
+assert hour_rows([("Mon", "9-5"), ("Tue", "9-6")]) == [("Mon", "9-5"), ("Tue", "9-6")]  # no run
+assert hour_rows([("Mon", "9-5"), ("Tue", "9-6"), ("Wed", "9-6")]) == \
+       [("Mon", "9-5"), ("Tue-Wed", "9-6")]                                  # run at the end
+
+HOUR_ROWS   = hour_rows(HOURS)
+HOURS_SHORT = " · ".join(f"{d} {h.replace(' - ', '-')}" for d, h in HOUR_ROWS)
 
 # product categories - all from their REAL Yelp list, no invented brands.
 # (icon, title, short[home], long[products page], items[generic product types, not brands])
@@ -365,7 +385,7 @@ def products():
 </main>{visit_cta()}{footer()}'''
 
 def visit():
-    hrows = "".join(f'<div class="hr-row"><span>{d}</span><strong>{h}</strong></div>' for d, h in HOURS)
+    hrows = "".join(f'<div class="hr-row"><span>{d}</span><strong>{h}</strong></div>' for d, h in HOUR_ROWS)
     amen = "".join(f'<span class="amen"><span class="amen-ic">{icon(k)}</span>{t}</span>' for k, t in AMENITIES)
     return head(f"Visit | {BIZ}",
         f"Find {BIZ} at {ADDR}. Hours, directions, and how to reach us.",
