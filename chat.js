@@ -117,7 +117,8 @@
   }
 
   // ---- rendering ----------------------------------------------------------------
-  var CHIPS = ['Hours', 'Where are you?', 'What do you carry?', 'Do you sell online?'];
+  // chip text doubles as the question that gets sent, so it must still match an intent
+  var CHIPS = ['Hours', 'Where are you located?', 'What do you carry?', 'Do you sell online?'];
   function bubbleEl(html, who) {
     var d = document.createElement('div');
     d.className = 'cw-msg cw-' + who;
