@@ -66,7 +66,8 @@
     // "do you card" = ID check; "do you take card" = payment. Order matters: this runs
     // before the payment intent, so the ID sense wins only on the ID phrasing.
     [/\b(21|18|age|ages|aged|ids?|identification|minors?|underage|carded|carding)\b|how old|old enough|card me|do (?:you|they) card\b/i, function () {
-      return 'You must be <strong>21+</strong> with a valid ID. Tobacco and vapor products are for adults 21 and over only.';
+      // phrased to answer both senses directly: "do you card?" (yes) and "how old?" (21)
+      return 'Yes, we card. You must be <strong>21+</strong> and show a valid photo ID. Tobacco and vapor products are for adults 21 and over only.';
     }],
     [/\b(brand|brands|puffco|zig|zag|raw|elf bar|elfbar)\b/i, function () {
       return 'Brands we carry include <strong>' + D.brands.join(', ') + '</strong>, plus plenty more on the wall. For a specific item, call ' + telLink + '.';
