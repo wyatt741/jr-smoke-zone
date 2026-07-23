@@ -17,7 +17,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 """
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=7"
+CSSV = "styles.css?v=9"
 JSV  = "app.js?v=1"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----

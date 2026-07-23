@@ -144,7 +144,9 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .marquee-sec{padding:26px 0;border-block:1px solid var(--line);background:var(--paper2)}
 .marquee-in{display:flex;align-items:center;gap:26px}
 .marquee-label{font-family:var(--disp);font-weight:700;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;flex-shrink:0}
-.marquee{overflow:hidden;flex:1;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
+/* min-width/max-width guard the column layout at <=600px, where flex:1 no longer
+   constrains the cross axis and the track would blow the page out horizontally */
+.marquee{overflow:hidden;flex:1;min-width:0;max-width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
 .marquee-track{display:flex;align-items:center;gap:14px;width:max-content}
 .mq-chip{font-family:var(--disp);font-weight:700;font-size:1rem;color:var(--ink);white-space:nowrap;padding:9px 20px;
   background:var(--surface);border:1px solid var(--line-2);border-radius:100px;box-shadow:0 6px 18px -14px rgba(0,0,0,.3)}
@@ -369,6 +371,18 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   .hero-copy h1{font-size:2.4rem}
   .hero-card{transform:none;max-width:100%}
   .marquee-in{flex-direction:column;align-items:flex-start;gap:14px}
+  .marquee{width:100%;align-self:stretch}
+  /* touch targets: >=44px on the controls that matter on a phone */
+  .burger{padding:13px 12px}
+  .big-phone{display:inline-block;padding:5px 0}
+  .v-mail,.v-ig{padding:7px 0}
+  .foot-col a{padding:9px 0}
+  .foot-social a{display:inline-block;padding:7px 0}
+  .shout{padding:26px 20px}
+  .visit-form{padding:22px}
+  .vcard{padding:22px}
+  .ag-card{padding:32px 22px}
+  .map-sec iframe{height:300px}
   .svc-grid,.feat-grid,.visit-info{grid-template-columns:1fr}
   .ig-grid{grid-template-columns:1fr 1fr;gap:12px}
   .foot-grid{grid-template-columns:1fr}
