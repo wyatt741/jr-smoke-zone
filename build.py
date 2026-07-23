@@ -17,7 +17,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 """
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=9"
+CSSV = "styles.css?v=12"
 JSV  = "app.js?v=1"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
@@ -256,13 +256,15 @@ def footer():
 
 # ============================ PAGES ============================
 def home():
+    # double-bezel: outer shell (.bezel) + inner core (.bezel-in), concentric radii
     prods = "".join(
-        f'''<a class="svc" href="products.html#{p[0]}">
-        <span class="ic-badge">{icon(p[0])}</span><h3>{p[1]}</h3><p>{p[2]}</p>
-        <span class="svc-more">See more<span class="btn-ic">&rarr;</span></span></a>'''
+        f'''<a class="svc bezel" href="products.html#{p[0]}"><span class="bezel-in svc-in">
+        <span class="ic-badge">{icon(p[0])}</span>
+        <span class="svc-copy"><h3>{p[1]}</h3><p>{p[2]}</p>
+        <span class="svc-more">See more<span class="btn-ic">&rarr;</span></span></span></span></a>'''
         for p in PRODUCTS)
     feats = "".join(
-        f'<div class="feat"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div>'
+        f'<div class="feat bezel"><div class="bezel-in feat-in"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div></div>'
         for k, t, d in FEATURES)
     # marquee: product keywords + real carried brands, rendered twice for a seamless loop
     chips = ["Vapes", "E-Liquid", "Disposables", "Hookah", "Shisha", "Glass Pipes",
@@ -270,9 +272,10 @@ def home():
     row = "".join(f'<span class="mq-chip">{c}</span>' for c in chips)
     marquee = row + row
     igtiles = "".join(
-        f'''<a class="ig-tile" href="{IG_POST.format(code)}" target="_blank" rel="noopener">
+        f'''<a class="ig-tile bezel" href="{IG_POST.format(code)}" target="_blank" rel="noopener">
+        <span class="bezel-in ig-in">
         <img src="assets/ig/{code}.jpg" alt="{label} at {BIZ}" loading="lazy">
-        <span class="ig-cap">{label}{icon("ig")}</span></a>''' for code, label in GALLERY)
+        <span class="ig-cap">{label}{icon("ig")}</span></span></a>''' for code, label in GALLERY)
     return head(f"{BIZ} | {TAG}",
         f"Locally owned smoke & vape shop in {CITY}. Vapes, e-liquid, hookah, glass pipes, bongs, cigars, and accessories. Come visit us on Ventura Blvd.",
         "home") + nav("index.html") + f'''
@@ -305,7 +308,7 @@ def home():
   <div class="sec-head center reveal"><span class="eyebrow">What we carry</span>
     <h2>One shop, all of it</h2>
     <p>From a fresh coil to a standout piece of glass, it's on the wall in {CITY.split(",")[0]}.</p></div>
-  <div class="svc-grid stagger reveal">{prods}</div>
+  <div class="bento stagger reveal">{prods}</div>
 </div></section>
 
 <section class="section band"><div class="wrap">
@@ -323,13 +326,13 @@ def home():
 <section class="section band"><div class="wrap">
   <div class="sec-head center reveal"><span class="eyebrow">More than a smoke shop</span><h2>Part of the neighborhood</h2>
     <p>JR Smoke Zone runs in-store toy drives, 4/20 events, and giveaways with local businesses, right next to our sister store JR Liquor Mart on Ventura Blvd.</p></div>
-  <figure class="shout reveal">
+  <figure class="shout bezel reveal"><div class="bezel-in shout-in">
     <blockquote>&ldquo;{SHOUTOUT["text"]}&rdquo;</blockquote>
     <figcaption>
       <span class="shout-who">{SHOUTOUT["who"]}</span>
       <a href="{IG_POST.format(SHOUTOUT["post"])}" target="_blank" rel="noopener">{SHOUTOUT["handle"]}{icon("ig")}</a>
     </figcaption>
-  </figure>
+  </div></figure>
 </div></section>
 </main>
 {visit_cta()}{footer()}'''
@@ -375,30 +378,30 @@ def visit():
 
 <section class="section" style="padding-top:32px"><div class="wrap visit-in">
   <div class="visit-info reveal">
-    <div class="vcard">
+    <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("pin")}</span>
       <h3>Address</h3>
       <p>{ADDR}</p>
       <a class="btn btn-primary cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
-    </div>
-    <div class="vcard">
+    </div></div>
+    <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("clock")}</span>
       <h3>Hours</h3>
       <div class="hours">{hrows}</div>
-    </div>
-    <div class="vcard">
+    </div></div>
+    <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("phone")}</span>
       <h3>Call the shop</h3>
       <a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a>
       <p>Call or text during shop hours.</p>
       <a class="v-mail" href="mailto:{EMAIL}">{EMAIL}</a>
-    </div>
-    <div class="vcard">
+    </div></div>
+    <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("store")}</span>
       <h3>Good to know</h3>
       <div class="amenities">{amen}</div>
       <a class="v-ig" href="{IG}" target="_blank" rel="noopener">Follow on Instagram &rarr;</a>
-    </div>
+    </div></div>
   </div>
 
   <aside class="visit-form reveal d1">
