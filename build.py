@@ -21,7 +21,7 @@ import json
 # ---- cache-busting (bump on any css/js change) ----
 CSSV = "styles.css?v=17"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=6"
+CHATV= "chat.js?v=7"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -87,6 +87,9 @@ MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",
 # ---- contact ----
 PHONE     = "(805) 384-5115"                         # verified real number
 PHONE_TEL = "+18053845115"
+# Cloudflare Worker URL for the AI chat bot (worker/). EMPTY = bot uses its free
+# deterministic answers. Set to the deployed Worker URL to switch on Claude-backed AI.
+WORKER    = ""                                       # e.g. "https://jrsmokezone-chat.<sub>.workers.dev"
 EMAIL     = "jrsmokezone@gmail.com"                  # real shop inbox (owner-supplied)
 # FormSubmit endpoint MUST stay lowercase (playbook §7 - changing the case forces
 # re-activation). The FIRST submission triggers a one-time activation email that the
@@ -254,7 +257,7 @@ def chat_data():
     """Feed the assistant the SAME constants the pages render, so it can never drift
     from the site or invent a fact. No API key, no backend - see chat.js."""
     d = {"biz": BIZ, "addr": ADDR, "phone": PHONE, "tel": PHONE_TEL, "email": EMAIL,
-         "maps": MAPS, "ig": IG, "review": REVIEW, "hoursShort": HOURS_SHORT,
+         "maps": MAPS, "ig": IG, "review": REVIEW, "worker": WORKER, "hoursShort": HOURS_SHORT,
          "days": [{"d": a, "h": b} for a, b in HOURS],        # Mon..Sun, for "open now?"
          "hours": [{"d": a, "h": b} for a, b in HOUR_ROWS],   # grouped, for display
          "products": [{"id": p[0], "title": p[1], "short": p[3]} for p in PRODUCTS],

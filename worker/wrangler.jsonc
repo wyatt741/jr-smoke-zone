@@ -1,0 +1,16 @@
+{
+  // Cloudflare Worker config for the JR Smoke Zone chat proxy.
+  // The Anthropic key is NOT here - it's a secret: `wrangler secret put ANTHROPIC_API_KEY`
+  "name": "jrsmokezone-chat",
+  "main": "worker.js",
+  "compatibility_date": "2026-07-24",
+  "observability": { "enabled": true, "head_sampling_rate": 1 }
+
+  // OPTIONAL per-IP rate limiting (recommended). Create a KV namespace, then uncomment:
+  //   wrangler kv namespace create RATE_KV
+  // paste the returned id below, and redeploy.
+  //
+  // ,"kv_namespaces": [
+  //   { "binding": "RATE_KV", "id": "PASTE_KV_NAMESPACE_ID_HERE" }
+  // ]
+}

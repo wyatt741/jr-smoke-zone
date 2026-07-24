@@ -140,19 +140,57 @@
     });
     log.appendChild(w); log.scrollTop = log.scrollHeight;
   }
-  function reply(text) {
+  // ---- AI mode (optional) --------------------------------------------------------
+  // If D.worker is set (build.py -> window.JRZ.worker), route to the Cloudflare Worker
+  // for real AI answers. On any error, fall back to the deterministic answer() above,
+  // so the bot always works. History holds committed user/assistant pairs for context.
+  var WORKER = (D.worker || '').replace(/\/+$/, '');
+  var history = [];
+  // escape all five HTML-significant chars: quotes matter because linkify drops URLs into
+  // href="..." - an un-escaped " in a jailbroken AI reply could otherwise break out.
+  function esc(s) { return s.replace(/[<>&"']/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function linkify(s) {                                     // AI text -> safe HTML with links
+    s = esc(s);
+    s = s.replace(/\bhttps?:\/\/[^\s<]+/g, function (u) {
+      return '<a href="' + u + '" target="_blank" rel="noopener">' + u.replace(/^https?:\/\//, '') + '</a>';
+    });
+    s = s.replace(/\(?\b\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}\b/g, function (p) {
+      return '<a href="tel:' + p.replace(/[^\d+]/g, '') + '">' + p + '</a>';
+    });
+    return s.replace(/\n/g, '<br>');
+  }
+  function typingEl() {
     var t = document.createElement('div');
     t.className = 'cw-typing'; t.innerHTML = '<span></span><span></span><span></span>';
-    log.appendChild(t); log.scrollTop = log.scrollHeight;
-    setTimeout(function () { t.remove(); bubbleEl(answer(text), 'bot'); showChips(); }, 420);
+    log.appendChild(t); log.scrollTop = log.scrollHeight; return t;
+  }
+  function botReply(text) {
+    var t = typingEl();
+    if (!WORKER) {                                          // no Worker configured -> deterministic
+      setTimeout(function () { t.remove(); bubbleEl(answer(text), 'bot'); showChips(); }, 420);
+      return;
+    }
+    var msgs = history.concat([{ role: 'user', content: text }]).slice(-16);
+    fetch(WORKER + '/chat', {
+      method: 'POST', headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ messages: msgs })
+    })
+      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
+      .then(function (d) {
+        var reply = (d && d.reply) ? String(d.reply) : '';
+        if (!reply) return Promise.reject('empty');
+        t.remove();
+        history.push({ role: 'user', content: text }, { role: 'assistant', content: reply });
+        history = history.slice(-16);
+        bubbleEl(linkify(reply), 'bot'); showChips();
+      })
+      .catch(function () { t.remove(); bubbleEl(answer(text), 'bot'); showChips(); });  // AI down -> deterministic
   }
   function send(text) {
     text = (text || '').trim(); if (!text) return;
     var chips = log.querySelector('.cw-chips'); if (chips) chips.remove();
-    bubbleEl(text.replace(/[<>&]/g, function (c) {          // user text is escaped
-      return { '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c];
-    }), 'user');
-    reply(text);
+    bubbleEl(esc(text), 'user');
+    botReply(text);
   }
 
   // ---- open / close --------------------------------------------------------------
