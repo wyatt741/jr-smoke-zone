@@ -310,6 +310,8 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .amen-ic{width:34px;height:34px;flex-shrink:0;border-radius:10px;display:grid;place-items:center;background:var(--band);color:var(--accent-text)}
 .amen-ic .ic-svg{width:19px;height:19px}
 .v-ig,.v-mail{color:var(--accent-text);font-weight:600;font-size:.96rem}
+.v-review{display:inline-flex;align-items:center;gap:7px;margin-top:10px;color:var(--accent-text);font-weight:600;font-size:.96rem}
+.v-review .ic-svg{width:16px;height:16px;fill:currentColor;stroke:none}
 .v-mail{display:inline-block;margin-top:10px;word-break:break-all}
 /* message form */
 .visit-form{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-xl);padding:30px;box-shadow:var(--shadow-soft);position:sticky;top:96px}

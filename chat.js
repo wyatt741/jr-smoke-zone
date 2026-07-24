@@ -99,6 +99,10 @@
     [/\b(wheelchair|accessible|accessibility|bike|handicap)\b/i, function () {
       return 'Good to know: ' + D.amenities.join(', ') + '.';
     }],
+    [/\b(review|reviews|rate|rating|google review|leave a review|feedback)\b/i, function () {
+      return (D.review ? 'Thank you! You can leave us a Google review here: <a href="' + D.review + '" target="_blank" rel="noopener">Review us on Google</a>. It really helps a local shop.'
+                       : 'You can find us on Google to leave a review. Thanks for the support!');
+    }],
     [/\b(instagram|insta|ig|social|facebook|follow)\b/i, function () {
       return 'We post deals and events on Instagram: <a href="' + D.ig + '" target="_blank" rel="noopener">@jrsmokezone</a>.';
     }],

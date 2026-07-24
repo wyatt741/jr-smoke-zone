@@ -19,9 +19,9 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=16"
+CSSV = "styles.css?v=17"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=5"
+CHATV= "chat.js?v=6"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -66,6 +66,7 @@ ICON = {
  "papers": _svg('<rect x="3.5" y="2.5" width="11" height="15" rx="2"/><path d="M7 6.5h4M7 10h4"/><path d="M7.5 21.5h11a2 2 0 0 0 2-2V7.5"/>'),
  "shirt":  _svg('<path d="M20.4 3.5 16 2a4 4 0 0 1-8 0L3.6 3.5a2 2 0 0 0-1.3 2.2l.6 3.5a1 1 0 0 0 1 .8H6v10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V10h2.1a1 1 0 0 0 1-.8l.6-3.5a2 2 0 0 0-1.3-2.2z"/>'),
  "ig":     _svg('<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/>'),
+ "star":   _svg('<path d="M12 3l2.5 5.9 6.4.5-4.9 4.2 1.5 6.2L12 16.9 6.5 20l1.5-6.2L3 9.6l6.4-.5z"/>'),
  "heart":  _svg('<path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.5l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.8 1-1a5.5 5.5 0 0 0 0-7.6z"/>'),
 }
 def icon(name): return ICON.get(name, "")
@@ -76,6 +77,9 @@ TAG    = "Camarillo's neighborhood smoke & vape shop"
 CITY   = "Camarillo, CA"
 ADDR   = "2616 Ventura Blvd, Camarillo, CA 93010"
 IG     = "https://www.instagram.com/jrsmokezone/"
+# Google review deep link - opens the star form for THIS place. Place ID verified 2026-07-24
+# (CID 0xa4341324cf2de8bd resolves to JR Smoke Zone; QR on the checkout card decodes to this).
+REVIEW = "https://search.google.com/local/writereview?placeid=ChIJ1zLRvUY36IARvegtzyQTNKQ"
 DOMAIN = "jrsmokezone.com"        # registered on Cloudflare 2026-07-23; DNS -> GitHub Pages
 MAPS   = "https://www.google.com/maps/search/?api=1&query=" + ADDR.replace(" ", "+").replace(",", "%2C")
 MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",", "%2C") + "&output=embed"
@@ -250,7 +254,7 @@ def chat_data():
     """Feed the assistant the SAME constants the pages render, so it can never drift
     from the site or invent a fact. No API key, no backend - see chat.js."""
     d = {"biz": BIZ, "addr": ADDR, "phone": PHONE, "tel": PHONE_TEL, "email": EMAIL,
-         "maps": MAPS, "ig": IG, "hoursShort": HOURS_SHORT,
+         "maps": MAPS, "ig": IG, "review": REVIEW, "hoursShort": HOURS_SHORT,
          "days": [{"d": a, "h": b} for a, b in HOURS],        # Mon..Sun, for "open now?"
          "hours": [{"d": a, "h": b} for a, b in HOUR_ROWS],   # grouped, for display
          "products": [{"id": p[0], "title": p[1], "short": p[3]} for p in PRODUCTS],
@@ -310,6 +314,7 @@ def footer():
     <p>A locally owned smoke &amp; vape shop in {CITY}. Vapes, hookah, glass, cigars, and accessories, all in one spot.</p>
     <div class="foot-social">
       <a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
+      <a href="{REVIEW}" target="_blank" rel="noopener" aria-label="Review us on Google">Review us on Google</a>
     </div>
   </div>
   <div class="foot-col"><h5>Explore</h5>{cols}</div>
@@ -476,6 +481,7 @@ def visit():
       <h3>Good to know</h3>
       <div class="amenities">{amen}</div>
       <a class="v-ig" href="{IG}" target="_blank" rel="noopener">Follow on Instagram &rarr;</a>
+      <a class="v-review" href="{REVIEW}" target="_blank" rel="noopener">{icon("star")}Review us on Google</a>
     </div></div>
   </div>
 
