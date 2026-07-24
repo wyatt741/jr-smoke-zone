@@ -74,7 +74,7 @@ TAG    = "Camarillo's neighborhood smoke & vape shop"
 CITY   = "Camarillo, CA"
 ADDR   = "2616 Ventura Blvd, Camarillo, CA 93010"
 IG     = "https://www.instagram.com/jrsmokezone/"
-DOMAIN = "jrsmokezone.com"        # TODO: placeholder domain until owner registers/points one
+DOMAIN = "jrsmokezone.com"        # registered on Cloudflare 2026-07-23; DNS -> GitHub Pages
 MAPS   = "https://www.google.com/maps/search/?api=1&query=" + ADDR.replace(" ", "+").replace(",", "%2C")
 MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",", "%2C") + "&output=embed"
 
@@ -514,7 +514,11 @@ def build():
         fh.write(sitemap())
     with open("robots.txt", "w", encoding="utf-8") as fh:
         fh.write(f"User-agent: *\nAllow: /\nSitemap: https://{DOMAIN}/sitemap.xml\n")
-    print("built:", ", ".join(PAGES), "+ sitemap.xml, robots.txt")
+    # GitHub Pages custom domain. One line, no scheme. Emitted here so `python3 build.py`
+    # never drops it. DNS (A + www CNAME) lives at Cloudflare (added 2026-07-23).
+    with open("CNAME", "w", encoding="utf-8") as fh:
+        fh.write(f"{DOMAIN}\n")
+    print("built:", ", ".join(PAGES), "+ sitemap.xml, robots.txt, CNAME")
 
 if __name__ == "__main__":
     build()
