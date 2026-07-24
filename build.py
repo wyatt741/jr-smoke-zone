@@ -19,9 +19,9 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=20"
+CSSV = "styles.css?v=21"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=11"
+CHATV= "chat.js?v=12"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -416,7 +416,12 @@ def home():
   <div class="hero-copy reveal">
     <span class="eyebrow"><span class="dot"></span>Locally owned · {CITY}</span>
     <h1>Your neighborhood <span class="hl">smoke shop</span></h1>
-    <p>We don't sell online, so come in and see it all in person.</p>
+    <div class="hero-visit">
+      <p class="hv-lead">Swing by the shop.</p>
+      <address class="hv-addr">{ADDR}</address>
+      <p class="hv-hours"><span class="hc-dot"></span>Open {HOURS_SHORT}</p>
+      <p class="hv-ask">Questions? <a href="#" data-open-chat>Ask our assistant<span class="btn-ic">&rarr;</span></a></p>
+    </div>
     <div class="hero-btns">
       <a class="btn btn-primary btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
       <a class="btn btn-ghost btn-lg" href="products.html">Browse products</a>
@@ -424,10 +429,6 @@ def home():
   </div>
   <aside class="hero-logo reveal d1">
     <img class="hero-mark" src="{LOGO}" alt="{BIZ}" width="480" height="480">
-    <div class="logo-facts">
-      <span class="lf-open"><span class="hc-dot"></span>Open 7 days on Ventura Blvd</span>
-      <span>{HOURS_SHORT}</span>
-    </div>
   </aside>
 </div></section>
 

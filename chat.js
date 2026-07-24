@@ -210,6 +210,10 @@
   }
   bubble.addEventListener('click', function () { toggle(panel.hidden); });
   document.getElementById('cw-close').addEventListener('click', function () { toggle(false); });
+  // let any [data-open-chat] element (e.g. the hero "Ask our assistant" link) open the panel
+  Array.prototype.forEach.call(document.querySelectorAll('[data-open-chat]'), function (el) {
+    el.addEventListener('click', function (e) { e.preventDefault(); toggle(true); });
+  });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) toggle(false); });
   form.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); input.value = ''; });
 })();
