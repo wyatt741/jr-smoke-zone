@@ -124,7 +124,8 @@
 
   // ---- rendering ----------------------------------------------------------------
   // chip text doubles as the question that gets sent, so it must still match an intent
-  var CHIPS = ['Hours', 'Where are you located?', 'What do you carry?', 'Do you sell online?'];
+  // no "Hours" chip - the greeting already prints the hours right above these
+  var CHIPS = ['What do you carry?', 'Where are you located?', 'Do you sell online?', 'How do I reach you?'];
   function bubbleEl(html, who) {
     var d = document.createElement('div');
     d.className = 'cw-msg cw-' + who;
