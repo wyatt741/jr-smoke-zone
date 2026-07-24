@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=22">
+<link rel="stylesheet" href="styles.css?v=23">
 <script>(function(){try{var t=localStorage.getItem("theme")||"dark";document.documentElement.setAttribute("data-theme",t);if(localStorage.getItem("age21")==="1")document.documentElement.setAttribute("data-age","ok");}catch(e){}})();</script>
 </head><body class="home">
 <div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="ag-title">
@@ -36,10 +36,10 @@
   <a class="brand " href="index.html" aria-label="JR Smoke Zone home"><span class="brand-badge"><img class="brand-ic" src="assets/logo.png" alt="" width="46" height="46"></span><span class="wordmark"><span class="wm-jr">JR</span> Smoke Zone</span></a>
   <nav class="nav-links"><a href="index.html" class="active">Home</a><a href="products.html">Products</a><a href="visit.html">Visit</a></nav>
   <button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle theme"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg></button>
-  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a>
+  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="https://www.google.com/maps/search/?api=1&query=2616+Ventura+Blvd%2C+Camarillo%2C+CA+93010" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
   <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header></div>
-<div class="mobile-menu" id="mobile-menu"><a href="index.html">Home</a><a href="products.html">Products</a><a href="visit.html">Visit</a><a class="btn btn-primary cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a><button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle theme"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg></button></div>
+<div class="mobile-menu" id="mobile-menu"><a href="index.html">Home</a><a href="products.html">Products</a><a href="visit.html">Visit</a><a class="btn btn-primary cta-anim" href="https://www.google.com/maps/search/?api=1&query=2616+Ventura+Blvd%2C+Camarillo%2C+CA+93010" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a><button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle theme"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.4M12 19.6V22M4.2 4.2l1.7 1.7M18.1 18.1l1.7 1.7M2 12h2.4M19.6 12H22M4.2 19.8l1.7-1.7M18.1 5.9l1.7-1.7"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg></button></div>
 <main id="main">
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-copy reveal">
@@ -181,6 +181,11 @@
     <svg class="cw-i cw-i-chat" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>
     <svg class="cw-i cw-i-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
+  <div class="cw-nudge" id="cw-nudge" hidden>
+    <button class="cw-nudge-open" type="button" data-open-chat>Questions? I can help.</button>
+    <button class="cw-nudge-x" id="cw-nudge-x" type="button" aria-label="Dismiss">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
   <div class="cw-panel" id="cw-panel" role="dialog" aria-labelledby="cw-title" hidden>
     <div class="cw-head">
       <img class="cw-avatar" src="assets/mark.png" alt="" width="34" height="34">
@@ -201,4 +206,4 @@
 </div>
 <script>window.JRZ={"biz": "JR Smoke Zone", "addr": "2616 Ventura Blvd, Camarillo, CA 93010", "phone": "(805) 384-5115", "tel": "+18053845115", "email": "jrsmokezone@gmail.com", "maps": "https://www.google.com/maps/search/?api=1&query=2616+Ventura+Blvd%2C+Camarillo%2C+CA+93010", "ig": "https://www.instagram.com/jrsmokezone/", "review": "https://search.google.com/local/writereview?placeid=ChIJ1zLRvUY36IARvegtzyQTNKQ", "worker": "https://chat.jrsmokezone.com", "hoursShort": "Mon-Sat 9am-9pm · Sun 10am-8pm", "days": [{"d": "Mon", "h": "9am - 9pm"}, {"d": "Tue", "h": "9am - 9pm"}, {"d": "Wed", "h": "9am - 9pm"}, {"d": "Thu", "h": "9am - 9pm"}, {"d": "Fri", "h": "9am - 9pm"}, {"d": "Sat", "h": "9am - 9pm"}, {"d": "Sun", "h": "10am - 8pm"}], "hours": [{"d": "Mon-Sat", "h": "9am - 9pm"}, {"d": "Sun", "h": "10am - 8pm"}], "products": [{"id": "vape", "title": "Vapes & E-Liquid", "short": "Devices, pods, disposables, and e-liquid."}, {"id": "hookah", "title": "Hookah", "short": "Hookahs, shisha, and everything for the session."}, {"id": "pipe", "title": "Glass Pipes", "short": "A deep glass selection - the thing folks come back for."}, {"id": "bong", "title": "Bongs & Water Pipes", "short": "Water pipes, beakers, rigs, and the parts to run them."}, {"id": "cigar", "title": "Cigars", "short": "Cigars and the smoking accessories to match."}, {"id": "papers", "title": "Rolling Papers & Trays", "short": "Papers, wraps, tips, and trays to keep it tidy."}, {"id": "gear", "title": "Vape Accessories", "short": "Chargers, coils, grinders, trays, and all the extras."}, {"id": "shirt", "title": "Apparel & Merch", "short": "Shirts, hats, and shop merch."}], "brands": ["Puffco", "Zig-Zag", "RAW"], "amenities": ["Wheelchair accessible", "Accepts credit cards", "Bike parking"]};</script>
 <script src="app.js?v=1"></script>
-<script src="chat.js?v=12"></script></body></html>
+<script src="chat.js?v=13"></script></body></html>

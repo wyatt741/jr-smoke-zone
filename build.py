@@ -19,9 +19,9 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=22"
+CSSV = "styles.css?v=23"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=12"
+CHATV= "chat.js?v=13"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -285,10 +285,10 @@ def nav(active):
   {brandmark(badge=True)}
   <nav class="nav-links">{links}</nav>
   {TOGGLE}
-  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a>
+  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
   <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header></div>
-<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
+<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
 
 def age_gate():
     # 21+ splash. Shown before paint unless localStorage age21=1 (set in BOOT -> data-age="ok").
@@ -325,6 +325,11 @@ def chat_widget():
     <svg class="cw-i cw-i-chat" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 21l2.1-5.4A8.5 8.5 0 1 1 21 11.5Z"/></svg>
     <svg class="cw-i cw-i-x" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
   </button>
+  <div class="cw-nudge" id="cw-nudge" hidden>
+    <button class="cw-nudge-open" type="button" data-open-chat>Questions? I can help.</button>
+    <button class="cw-nudge-x" id="cw-nudge-x" type="button" aria-label="Dismiss">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
   <div class="cw-panel" id="cw-panel" role="dialog" aria-labelledby="cw-title" hidden>
     <div class="cw-head">
       <img class="cw-avatar" src="{MARK}" alt="" width="34" height="34">
@@ -508,8 +513,8 @@ def visit():
         "visit") + nav("visit.html") + f'''
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">Visit</span><h1>Come see us</h1>
-  <p>We're on Ventura Blvd in {CITY.split(",")[0]}, open seven days a week. Directions, hours, and a message form are all right here.</p>
+  <span class="eyebrow">Come see us</span><h1>Swing by the shop.</h1>
+  <p>{ADDR}. Open {HOURS_SHORT}. Questions? The staff's got you.</p>
 </div></section>
 
 <section class="section" style="padding-top:32px"><div class="wrap visit-in">
@@ -527,9 +532,12 @@ def visit():
     </div></div>
     <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("phone")}</span>
-      <h3>Call the shop</h3>
+      <h3>Call or text</h3>
       <a class="big-phone" href="tel:{PHONE_TEL}">{PHONE}</a>
-      <p>Call or text during shop hours.</p>
+      <div class="ct-btns">
+        <a class="btn btn-primary btn-sm cta-anim" href="tel:{PHONE_TEL}">Call<span class="btn-ic">&rarr;</span></a>
+        <a class="btn btn-ghost btn-sm" href="sms:{PHONE_TEL}">Text us</a>
+      </div>
       <a class="v-mail" href="mailto:{EMAIL}">{EMAIL}</a>
     </div></div>
     <div class="vcard bezel"><div class="bezel-in vcard-in">

@@ -303,6 +303,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .hr-row span{color:var(--muted)}
 .hr-row strong{font-family:var(--disp)}
 .big-phone{font-family:var(--disp);font-weight:800;font-size:1.5rem;color:var(--accent-text);display:inline-block}
+.ct-btns{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
 .todo-note{color:var(--muted);font-size:.82rem;margin-top:8px;font-style:italic}
 .amenities{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
 .amen{display:inline-flex;align-items:center;gap:10px;font-weight:500;font-size:.96rem}
@@ -490,6 +491,20 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
 /* ---- chat widget (deterministic assistant, see chat.js) ---- */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
 .cw{position:fixed;right:22px;bottom:22px;z-index:var(--z-nav);font-family:var(--body)}
+/* proactive nudge: small speech bubble over the launcher, fired once per session */
+.cw-nudge{position:absolute;right:3px;bottom:74px;display:flex;align-items:flex-start;max-width:236px;
+  background:var(--surface);border:1px solid var(--line-2);border-radius:16px;box-shadow:var(--shadow);
+  opacity:0;transform:translateY(10px) scale(.95);transform-origin:bottom right;pointer-events:none;
+  transition:opacity .42s cubic-bezier(.32,.72,0,1),transform .42s cubic-bezier(.32,.72,0,1)}
+.cw-nudge--in{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.cw-nudge::after{content:"";position:absolute;right:20px;bottom:-6px;width:12px;height:12px;background:var(--surface);
+  border-right:1px solid var(--line-2);border-bottom:1px solid var(--line-2);transform:rotate(45deg)}
+.cw-nudge-open{border:0;background:transparent;cursor:pointer;padding:13px 4px 13px 16px;text-align:left;
+  font-family:var(--disp);font-weight:700;font-size:.92rem;line-height:1.3;color:var(--ink)}
+.cw-nudge-open:hover{color:var(--accent-text)}
+.cw-nudge-x{border:0;background:transparent;cursor:pointer;padding:9px 10px 0 4px;color:var(--muted);flex-shrink:0}
+.cw-nudge-x svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.cw-nudge-x:hover{color:var(--ink)}
 .cw-bubble{position:relative;width:58px;height:58px;border-radius:100px;border:0;cursor:pointer;background:var(--grad);
   box-shadow:0 16px 34px -12px rgba(103,173,232,.65);display:grid;place-items:center;
   transition:transform .5s cubic-bezier(.32,.72,0,1)}

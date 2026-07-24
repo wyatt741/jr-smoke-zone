@@ -12,6 +12,7 @@
   if (!panel || !bubble) return;
 
   var telLink  = '<a href="tel:' + D.tel + '">' + D.phone + '</a>';
+  var smsLink  = '<a href="sms:' + D.tel + '">text us</a>';   // shop takes texts; warmer than email
   var mapsLink = '<a href="' + D.maps + '" target="_blank" rel="noopener">get directions</a>';
 
   // ---- "are you open right now?" from the real per-day hours -------------------
@@ -47,17 +48,17 @@
   var INTENTS = [
     // price/stock deflect FIRST so "how much is a bong" never hits the product intent
     [/\b(price|prices|pricing|cost|costs|how much|cheap|expensive|deal|deals|sale)\b/i, function () {
-      return 'Prices change with stock, so I do not quote them here. Call the shop and they will tell you exactly: ' + telLink + '.';
+      return 'Prices change with stock, so I do not quote them here. Call or ' + smsLink + ' and the shop will tell you exactly: ' + telLink + '.';
     }],
     [/\b(in stock|stock|do you have|have any|got any|available|carry a|specific)\b/i, function () {
-      return 'I cannot check live stock. Give the shop a call and they will look for you: ' + telLink + '.<br><br>Here is what we carry:<br>' + productLines();
+      return 'I cannot check live stock. Call or ' + smsLink + ' and the shop will look for you: ' + telLink + '.<br><br>Here is what we carry:<br>' + productLines();
     }],
     [/\b(hour|hours|open|close|closed|closing|opening|today|tonight|time)\b/i, hoursAnswer],
     [/\b(where|address|located|location|direction|directions|find you|parking|map)\b/i, function () {
       return "We're at <strong>" + D.addr + '</strong>.<br><br>You can ' + mapsLink + '.';
     }],
     [/\b(phone|call|number|contact|text|reach)\b/i, function () {
-      return 'Call or text ' + telLink + '.<br>Email: <a href="mailto:' + D.email + '">' + D.email + '</a>';
+      return 'Call ' + telLink + ' or ' + smsLink + ', during shop hours.<br>Email: <a href="mailto:' + D.email + '">' + D.email + '</a>';
     }],
     [/\b(online|ship|shipping|deliver|delivery|order|website order|buy online)\b/i, function () {
       return 'We do not sell online, it is an in-store shop only. Come see us at ' + D.addr + ' and you can ' + mapsLink + '.';
@@ -196,10 +197,12 @@
 
   // ---- open / close --------------------------------------------------------------
   var started = false;
+  var nudgeHide = null;   // set by the nudge block below; lets opening the chat dismiss it
   function toggle(open) {
     panel.hidden = !open;
     wrap.classList.toggle('cw--open', open);
     bubble.setAttribute('aria-expanded', open);
+    if (open && nudgeHide) { nudgeHide(); nudgeHide = null; }
     if (open && !started) {
       started = true;
       bubbleEl("Hey, welcome to " + D.biz + ". Ask me about hours, directions, or what we carry.<br><br>" +
@@ -214,6 +217,36 @@
   Array.prototype.forEach.call(document.querySelectorAll('[data-open-chat]'), function (el) {
     el.addEventListener('click', function (e) { e.preventDefault(); toggle(true); });
   });
+
+  // ---- proactive nudge: a small "Questions? I can help." bubble over the launcher.
+  // Fires ONCE per session (sessionStorage), after a delay or a bit of scroll, and never
+  // if the visitor already opened the chat. Dismissible; opening the chat hides it too.
+  var nudge = document.getElementById('cw-nudge');
+  if (nudge && !sessionStorage.getItem('cw-nudged')) {
+    var timer;
+    var hideNudge = function () {
+      nudge.classList.remove('cw-nudge--in');
+      setTimeout(function () { nudge.hidden = true; }, 320);
+      window.removeEventListener('scroll', onScroll);
+      clearTimeout(timer);
+    };
+    var showNudge = function () {
+      if (!nudge.hidden || !panel.hidden || sessionStorage.getItem('cw-nudged')) return;
+      sessionStorage.setItem('cw-nudged', '1');
+      nudge.hidden = false;
+      requestAnimationFrame(function () { nudge.classList.add('cw-nudge--in'); });
+    };
+    var onScroll = function () {
+      var y = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      if (y > 500) showNudge();
+    };
+    timer = setTimeout(showNudge, 16000);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.getElementById('cw-nudge-x').addEventListener('click', function (e) {
+      e.stopPropagation(); hideNudge();
+    });
+    nudgeHide = hideNudge;  // let toggle() dismiss it when the chat opens
+  }
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !panel.hidden) toggle(false); });
   form.addEventListener('submit', function (e) { e.preventDefault(); send(input.value); input.value = ''; });
 })();
