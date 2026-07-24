@@ -181,7 +181,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 /* nav/footer brand mark */
 .brand{gap:10px}
 .brand-ic{height:40px;width:auto;flex-shrink:0}
-.brand-foot .brand-ic{height:42px}
+.brand-foot .brand-ic{width:50px;height:50px}
 
 /* ---- keyword marquee (image-free) ---- */
 .marquee-sec{padding:26px 0;border-block:1px solid var(--line);background:var(--paper2)}

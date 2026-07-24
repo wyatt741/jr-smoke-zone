@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=29"
+CSSV = "styles.css?v=30"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=15"
 
@@ -241,7 +241,7 @@ GALLERY = [
 ]
 IG_POST = "https://www.instagram.com/p/{}/"
 
-NAV = [("index.html", "Home"), ("products.html", "Products"), ("visit.html", "Visit")]
+NAV = [("index.html", "Home"), ("products.html", "Products")]
 
 # ============================ SHARED CHROME ============================
 def head(title, desc, page=""):
@@ -290,10 +290,10 @@ def nav(active):
   {brandmark(badge=True)}
   <nav class="nav-links">{links}</nav>
   {TOGGLE}
-  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
+  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="visit.html">Contact Us<span class="btn-ic">&rarr;</span></a>
   <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header></div>
-<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
+<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="visit.html">Contact Us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
 
 def age_gate():
     # 21+ splash. Shown before paint unless localStorage age21=1 (set in BOOT -> data-age="ok").
@@ -368,7 +368,7 @@ def visit_cta():
 </div></div></section>'''
 
 def footer():
-    cols = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
+    cols = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV) + '<a href="visit.html">Contact</a>'
     return f'''<footer>
 <div class="wrap warn-bar">
   <strong>WARNING:</strong> This product contains nicotine. Nicotine is an addictive chemical.
@@ -376,15 +376,15 @@ def footer():
 </div>
 <div class="wrap foot-grid">
   <div class="foot-brand">
-    {brandmark("brand-foot")}
-    <p>A locally owned smoke &amp; vape shop in {CITY}. Vapes, hookah, glass, cigars, and accessories, <span class="nowrap">all in one spot</span>.</p>
+    {brandmark("brand-foot", badge=True)}
+    <p>Glass, vapes, hookah, cigars, and every accessory to match. On Ventura Blvd in {CITY.split(",")[0]}.</p>
     <div class="foot-social">
       <a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
       <a href="{REVIEW}" target="_blank" rel="noopener" aria-label="Review us on Google">Review us on Google</a>
     </div>
   </div>
   <div class="foot-col"><h5>Explore</h5>{cols}</div>
-  <div class="foot-col"><h5>Visit</h5>
+  <div class="foot-col"><h5>Find us</h5>
     <a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a>
     <a href="tel:{PHONE_TEL}">{PHONE}</a>
     <a href="mailto:{EMAIL}">{EMAIL}</a>
@@ -513,12 +513,12 @@ def products():
 def visit():
     hrows = "".join(f'<div class="hr-row"><span>{d}</span><strong>{h}</strong></div>' for d, h in HOUR_ROWS)
     amen = "".join(f'<span class="amen"><span class="amen-ic">{icon(k)}</span>{t}</span>' for k, t in AMENITIES)
-    return head(f"Visit | {BIZ}",
-        f"Find {BIZ} at {ADDR}. Hours, directions, and how to reach us.",
+    return head(f"Contact | {BIZ}",
+        f"Contact {BIZ} at {ADDR}. Hours, directions, phone, and a message form.",
         "visit") + nav("visit.html") + f'''
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">Come see us</span><h1>Swing by the shop.</h1>
+  <span class="eyebrow">Contact us</span><h1>Swing by the shop.</h1>
   <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p>
 </div></section>
 
