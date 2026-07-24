@@ -81,8 +81,44 @@ IG     = "https://www.instagram.com/jrsmokezone/"
 # (CID 0xa4341324cf2de8bd resolves to JR Smoke Zone; QR on the checkout card decodes to this).
 REVIEW = "https://search.google.com/local/writereview?placeid=ChIJ1zLRvUY36IARvegtzyQTNKQ"
 DOMAIN = "jrsmokezone.com"        # registered on Cloudflare 2026-07-23; DNS -> GitHub Pages
+BASE   = f"https://{DOMAIN}"      # absolute origin for canonical / og / schema URLs
+OG_IMG = f"{BASE}/assets/og.png"  # 1200x630 social share card (generated in build.py sibling script)
+GEO    = (34.2160488, -119.0352246)  # 2616 Ventura Blvd, verified via OSM Nominatim 2026-07-24
 MAPS   = "https://www.google.com/maps/search/?api=1&query=" + ADDR.replace(" ", "+").replace(",", "%2C")
 MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",", "%2C") + "&output=embed"
+
+# canonical URL per page (body-class key -> absolute URL). Home canonicals to the bare
+# domain, not /index.html, so GitHub Pages' "/" and "/index.html" don't split ranking.
+CANON = {"home": f"{BASE}/", "products": f"{BASE}/products.html", "visit": f"{BASE}/visit.html"}
+
+def local_business_ld():
+    """LocalBusiness (Store) JSON-LD for local SEO - Google rich results / Maps.
+    All facts verified (address, phone, hours, geo); NO ratings/reviews (non-negotiable)."""
+    hrs = [{"@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+            "opens": "09:00", "closes": "21:00"},
+           {"@type": "OpeningHoursSpecification", "dayOfWeek": "Sunday",
+            "opens": "10:00", "closes": "20:00"}]
+    data = {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "@id": f"{BASE}/#store",
+        "name": BIZ,
+        "description": "Locally owned smoke and vape shop in Camarillo, CA - vapes, e-liquid, hookah, glass pipes, bongs, cigars, and accessories.",
+        "url": f"{BASE}/",
+        "telephone": PHONE_TEL,
+        "image": OG_IMG,
+        "logo": f"{BASE}/{LOGO}",
+        "priceRange": "$$",
+        "address": {"@type": "PostalAddress", "streetAddress": "2616 Ventura Blvd",
+                    "addressLocality": "Camarillo", "addressRegion": "CA",
+                    "postalCode": "93010", "addressCountry": "US"},
+        "geo": {"@type": "GeoCoordinates", "latitude": GEO[0], "longitude": GEO[1]},
+        "hasMap": MAPS,
+        "openingHoursSpecification": hrs,
+        "sameAs": [IG],
+    }
+    return '<script type="application/ld+json">' + json.dumps(data, separators=(",", ":")) + '</script>'
 
 # ---- contact ----
 PHONE     = "(805) 384-5115"                         # verified real number
@@ -204,11 +240,20 @@ NAV = [("index.html", "Home"), ("products.html", "Products"), ("visit.html", "Vi
 
 # ============================ SHARED CHROME ============================
 def head(title, desc, page=""):
+    canon = CANON.get(page, f"{BASE}/")
     return f'''<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title><meta name="description" content="{desc}">
+<link rel="canonical" href="{canon}">
 <meta property="og:title" content="{title}"><meta property="og:description" content="{desc}">
-<meta property="og:type" content="website"><meta name="theme-color" content="#0a0d13">
+<meta property="og:type" content="website"><meta property="og:url" content="{canon}">
+<meta property="og:site_name" content="{BIZ}"><meta property="og:image" content="{OG_IMG}">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}"><meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{OG_IMG}">
+{local_business_ld()}
+<meta name="theme-color" content="#0a0d13">
 <link rel="icon" href="assets/favicon.ico{ICOV}" sizes="any">
 <link rel="icon" type="image/png" href="assets/favicon.png{ICOV}">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png{ICOV}">
@@ -512,7 +557,9 @@ def visit():
 PAGES = {"index.html": home, "products.html": products, "visit.html": visit}
 
 def sitemap():
-    urls = "".join(f"<url><loc>https://{DOMAIN}/{p}</loc></url>" for p in PAGES)
+    # loc must match each page's <link rel=canonical>: home = bare domain, not /index.html
+    locs = [f"{BASE}/"] + [f"{BASE}/{p}" for p in PAGES if p != "index.html"]
+    urls = "".join(f"<url><loc>{u}</loc></url>" for u in locs)
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
 
 def build():
