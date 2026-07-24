@@ -21,7 +21,7 @@ import json
 # ---- cache-busting (bump on any css/js change) ----
 CSSV = "styles.css?v=17"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=9"
+CHATV= "chat.js?v=10"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -126,8 +126,8 @@ HOURS_SHORT = " · ".join(f"{d} {h.replace(' - ', '-')}" for d, h in HOUR_ROWS)
 # (icon, title, short[home], long[products page], items[generic product types, not brands])
 PRODUCTS = [
  ("vape",  "Vapes & E-Liquid", "assets/products/vape.jpg",
-  "Devices, disposables, and a wall of e-liquid flavors.",
-  "Vape devices, pods, and disposables, plus a big selection of e-liquid to match whatever you're after. New to it or dialing in a setup, the staff will point you the right way.",
+  "Devices, pods, disposables, and e-liquid.",
+  "Vape devices, pods, disposables, and e-liquid. New to it or dialing in a setup, the staff will point you the right way toward what California lets us carry.",
   ["Vape devices & pods", "Disposables", "E-liquid & salts", "Coils & pods"]),
  ("hookah", "Hookah", "assets/products/hookah.jpg",
   "Hookahs, shisha, and everything for the session.",
@@ -176,8 +176,10 @@ FEATURES = [
 AMENITIES = [("wheel", "Wheelchair accessible"), ("card", "Accepts credit cards"),
              ("bike", "Bike parking")]
 
-# brands the shop actually carries (stated in their own IG posts - real, not invented)
-BRANDS = ["Puffco", "Zig-Zag", "RAW", "Elf Bar"]
+# brands the shop carries (from their own IG posts). Elf Bar (flavored disposables) pulled
+# 2026-07-24 for California compliance: flavored vapes/disposables are illegal to sell at
+# retail in CA (SB 793), so we don't advertise them. Papers/dab brands are unaffected.
+BRANDS = ["Puffco", "Zig-Zag", "RAW"]
 
 # REAL public shout-out from a local business (IG post 2026-05-22), trimmed excerpt.
 # Not a customer review and not a rating - attributed + linked to the source post.
@@ -354,7 +356,7 @@ def home():
         for k, t, d in FEATURES)
     # marquee: product keywords + real carried brands, rendered twice for a seamless loop
     chips = ["Vapes", "E-Liquid", "Disposables", "Hookah", "Shisha", "Glass Pipes",
-             "Bongs", "Puffco", "Zig-Zag", "RAW", "Elf Bar", "Cigars", "Grinders", "Accessories"]
+             "Bongs", "Puffco", "Zig-Zag", "RAW", "Cigars", "Grinders", "Accessories"]
     row = "".join(f'<span class="mq-chip">{c}</span>' for c in chips)
     marquee = row + row
     igtiles = "".join(

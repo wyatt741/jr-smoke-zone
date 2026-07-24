@@ -73,7 +73,7 @@
       return 'Brands we carry include <strong>' + D.brands.join(', ') + '</strong>, plus plenty more on the wall. For a specific item, call ' + telLink + '.';
     }],
     [/\b(vape|vapes|e-?liquid|ejuice|e-?juice|pod|pods|disposable|coil|salt)\b/i, function () {
-      return 'Yes - vape devices, pods, disposables, and a big wall of e-liquid. New to it or dialing in a setup, the staff will walk you through it.';
+      return 'Yes - vape devices, pods, disposables, and e-liquid. New to it or dialing in a setup, the staff will walk you through what California lets us carry.';
     }],
     [/\b(hookah|shisha|coal|coals|bowl|hose)\b/i, function () {
       return 'We do hookah: full setups plus shisha, hoses, bowls, and coals. Grab a whole kit or just restock.';
