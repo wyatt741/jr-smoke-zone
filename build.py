@@ -359,7 +359,7 @@ def visit_cta():
   <div class="cta-copy">
     <span class="eyebrow eyebrow-light">Come see us</span>
     <h2>Swing by the shop.</h2>
-    <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>, the staff's got you.</p>
+    <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p>
   </div>
   <div class="cta-btns">
     <a class="btn btn-glow btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
@@ -519,7 +519,7 @@ def visit():
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
   <span class="eyebrow">Come see us</span><h1>Swing by the shop.</h1>
-  <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>, the staff's got you.</p>
+  <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p>
 </div></section>
 
 <section class="section" style="padding-top:32px"><div class="wrap visit-in">
