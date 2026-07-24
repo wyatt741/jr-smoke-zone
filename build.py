@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=32"
+CSSV = "styles.css?v=33"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=15"
 

@@ -88,8 +88,8 @@ body.menu-open .nav-shell{z-index:calc(var(--z-menu) + 1)}
 /* light theme: the badge's white lettering vanishes on the white NAV, so give it the dark
    tile back there (dark theme + the always-dark footer stay boxless) */
 :root:not([data-theme="dark"]) .nav-in .brand-badge{background:#0a0d13;border:1px solid rgba(255,255,255,.14);
-  border-radius:13px;padding:4px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
-:root:not([data-theme="dark"]) .nav-in .brand-badge .brand-ic{width:46px;height:46px}
+  border-radius:12px;padding:2px;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+:root:not([data-theme="dark"]) .nav-in .brand-badge .brand-ic{width:52px;height:52px}
 .nav-links{display:flex;align-items:center;gap:24px;margin-left:auto}
 .nav-links a{font-family:var(--disp);font-weight:600;color:var(--ink-soft);font-size:.96rem;position:relative;transition:color .25s}
 .nav-links a::after{content:"";position:absolute;left:0;right:100%;bottom:-6px;height:2px;background:var(--blue);border-radius:2px;transition:right .3s var(--ease)}
@@ -183,6 +183,10 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
   background:radial-gradient(closest-side,var(--logo-halo),transparent 72%)}
 .hero-mark{position:relative;z-index:1;width:100%;max-width:480px;height:auto;
   filter:drop-shadow(0 18px 40px rgba(0,0,0,.45))}
+/* light theme: the full logo is drawn for a black background (white lettering), so give the
+   hero mark a solid dark disc behind it instead of a faint haze */
+:root:not([data-theme="dark"]) .hero-logo::before{width:132%;
+  background:radial-gradient(closest-side,#0b0f17 82%,rgba(11,15,23,0) 100%)}
 /* nav/footer brand mark */
 .brand{gap:10px}
 .brand-ic{height:40px;width:auto;flex-shrink:0}
