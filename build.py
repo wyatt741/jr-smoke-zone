@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=30"
+CSSV = "styles.css?v=32"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=15"
 
@@ -90,7 +90,7 @@ MAP_EMBED = "https://www.google.com/maps?q=" + ADDR.replace(" ", "+").replace(",
 
 # canonical URL per page (body-class key -> absolute URL). Home canonicals to the bare
 # domain, not /index.html, so GitHub Pages' "/" and "/index.html" don't split ranking.
-CANON = {"home": f"{BASE}/", "products": f"{BASE}/products.html", "visit": f"{BASE}/visit.html"}
+CANON = {"home": f"{BASE}/", "products": f"{BASE}/products.html", "visit": f"{BASE}/contact.html"}
 
 def local_business_ld():
     """LocalBusiness (Store) JSON-LD for local SEO - Google rich results / Maps.
@@ -290,10 +290,10 @@ def nav(active):
   {brandmark(badge=True)}
   <nav class="nav-links">{links}</nav>
   {TOGGLE}
-  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="visit.html">Contact Us<span class="btn-ic">&rarr;</span></a>
+  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="contact.html">Contact Us<span class="btn-ic">&rarr;</span></a>
   <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header></div>
-<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="visit.html">Contact Us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
+<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="contact.html">Contact Us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
 
 def age_gate():
     # 21+ splash. Shown before paint unless localStorage age21=1 (set in BOOT -> data-age="ok").
@@ -368,7 +368,7 @@ def visit_cta():
 </div></div></section>'''
 
 def footer():
-    cols = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV) + '<a href="visit.html">Contact</a>'
+    cols = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV) + '<a href="contact.html">Contact</a>'
     return f'''<footer>
 <div class="wrap warn-bar">
   <strong>WARNING:</strong> This product contains nicotine. Nicotine is an addictive chemical.
@@ -515,7 +515,7 @@ def visit():
     amen = "".join(f'<span class="amen"><span class="amen-ic">{icon(k)}</span>{t}</span>' for k, t in AMENITIES)
     return head(f"Contact | {BIZ}",
         f"Contact {BIZ} at {ADDR}. Hours, directions, phone, and a message form.",
-        "visit") + nav("visit.html") + f'''
+        "visit") + nav("contact.html") + f'''
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
   <span class="eyebrow">Contact us</span><h1>Swing by the shop.</h1>
@@ -574,7 +574,7 @@ def visit():
 </main>{footer()}'''
 
 # ============================ BUILD ============================
-PAGES = {"index.html": home, "products.html": products, "visit.html": visit}
+PAGES = {"index.html": home, "products.html": products, "contact.html": visit}
 
 def sitemap():
     # loc must match each page's <link rel=canonical>: home = bare domain, not /index.html
@@ -582,10 +582,20 @@ def sitemap():
     urls = "".join(f"<url><loc>{u}</loc></url>" for u in locs)
     return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
 
+# the page moved visit.html -> contact.html; keep a redirect so old/shared links don't 404
+REDIRECT_STUB = (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
+                 f'<title>{BIZ}</title><link rel="canonical" href="{BASE}/contact.html">'
+                 f'<meta http-equiv="refresh" content="0; url=/contact.html">'
+                 f'<meta name="robots" content="noindex">'
+                 f'<script>location.replace("/contact.html")</script></head>'
+                 f'<body>Redirecting to <a href="/contact.html">Contact</a>.</body></html>')
+
 def build():
     for fn, f in PAGES.items():
         with open(fn, "w", encoding="utf-8") as fh:
             fh.write(f())
+    with open("visit.html", "w", encoding="utf-8") as fh:   # legacy URL -> contact.html
+        fh.write(REDIRECT_STUB)
     with open("sitemap.xml", "w", encoding="utf-8") as fh:
         fh.write(sitemap())
     with open("robots.txt", "w", encoding="utf-8") as fh:
