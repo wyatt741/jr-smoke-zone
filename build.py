@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=21"
+CSSV = "styles.css?v=22"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=12"
 
@@ -266,9 +266,15 @@ def head(title, desc, page=""):
 {age_gate()}
 <a class="skip" href="#main">Skip to content</a>'''
 
-def brandmark(cls=""):
+def brandmark(cls="", badge=False):
+    # badge=True -> the full logo (scorpion + arched "JR. Smoke Zone") on a fixed-dark tile
+    # so the logo's white lettering stays legible on the light-theme nav too. The wordmark
+    # text is kept because the badge lettering is decorative-small at nav size.
+    emblem = (f'<span class="brand-badge"><img class="brand-ic" src="{LOGO}" alt="" width="46" height="46"></span>'
+              if badge else
+              f'<img class="brand-ic" src="{MARK}" alt="" width="40" height="40">')
     return (f'<a class="brand {cls}" href="index.html" aria-label="{BIZ} home">'
-            f'<img class="brand-ic" src="{MARK}" alt="" width="40" height="40">'
+            f'{emblem}'
             f'<span class="wordmark"><span class="wm-jr">JR</span> Smoke Zone</span></a>')
 
 def nav(active):
@@ -276,7 +282,7 @@ def nav(active):
         f'<a href="{h}"{" class=\"active\"" if h==active else ""}>{t}</a>' for h, t in NAV)
     mlinks = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     return f'''<div class="nav-shell"><header class="nav"><div class="nav-in">
-  {brandmark()}
+  {brandmark(badge=True)}
   <nav class="nav-links">{links}</nav>
   {TOGGLE}
   <a class="btn btn-primary btn-sm nav-cta cta-anim" href="visit.html">Visit us<span class="btn-ic">&rarr;</span></a>
