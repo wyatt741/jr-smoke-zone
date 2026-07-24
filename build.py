@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=19"
+CSSV = "styles.css?v=20"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=11"
 
@@ -429,7 +429,7 @@ def products():
     # (one closing band covers it). id on each card so home's "See more" links land here.
     cards = "".join(
         f'''<article class="prod-card bezel reveal" id="{ic}"><div class="bezel-in">
-        <div class="prod-photo"><img src="{photo}" alt="{title} at {BIZ}" loading="lazy" width="900" height="720"></div>
+        <div class="prod-photo"><img src="{photo}" alt="{title} at {BIZ}" width="900" height="720"></div>
         <div class="prod-body">
           <div class="prod-head"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2></div>
           <p>{long}</p><ul class="ticks">{"".join(f"<li>{x}</li>" for x in items)}</ul>

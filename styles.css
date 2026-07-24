@@ -257,7 +257,8 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .btn .ic-svg{width:18px;height:18px}
 
 /* ---- page hero (inner pages) ---- */
-.page-hero{padding:56px 0 8px;background:radial-gradient(900px 420px at 100% -20%,rgba(103,173,232,.09),transparent 60%)}
+.page-hero{padding:56px 0 8px;background:radial-gradient(900px 420px at 50% -20%,rgba(103,173,232,.09),transparent 60%)}
+.page-hero .wrap{text-align:center;display:flex;flex-direction:column;align-items:center}
 .page-hero h1{font-size:clamp(2.3rem,5.5vw,3.7rem);letter-spacing:-.035em;text-wrap:balance}
 .page-hero p{color:var(--muted);font-size:1.16rem;margin-top:14px;max-width:62ch}
 
