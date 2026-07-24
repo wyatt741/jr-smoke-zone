@@ -503,7 +503,7 @@ def products():
 <main id="main">
 <section class="page-hero"><div class="wrap reveal">
   <span class="eyebrow">Products</span><h1>What's on the wall</h1>
-  <p>Everything a locally owned smoke &amp; vape shop should have, under one roof in {CITY.split(",")[0]}. We don't sell online, so come in and see it all in person.</p>
+  <p>A deep glass wall, vapes and e-liquid, hookah, cigars, and every accessory to match. Come see the whole wall in person, it's better in your hands than on a screen.</p>
 </div></section>
 <section class="section" style="padding-top:40px"><div class="wrap">
   <div class="prod-grid stagger reveal">{cards}</div>
