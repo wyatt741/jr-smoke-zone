@@ -21,7 +21,7 @@ import json
 # ---- cache-busting (bump on any css/js change) ----
 CSSV = "styles.css?v=17"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=10"
+CHATV= "chat.js?v=11"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -89,7 +89,7 @@ PHONE     = "(805) 384-5115"                         # verified real number
 PHONE_TEL = "+18053845115"
 # Cloudflare Worker URL for the AI chat bot (worker/). EMPTY = bot uses its free
 # deterministic answers. Set to the deployed Worker URL to switch on Claude-backed AI.
-WORKER    = "https://jrsmokezone-chat.andersontech.workers.dev"   # AI bot live (deployed 2026-07-24)
+WORKER    = "https://chat.jrsmokezone.com"   # AI bot live on branded custom domain (2026-07-24)
 EMAIL     = "jrsmokezone@gmail.com"                  # real shop inbox (owner-supplied)
 # FormSubmit endpoint MUST stay lowercase (playbook §7 - changing the case forces
 # re-activation). The FIRST submission triggers a one-time activation email that the
