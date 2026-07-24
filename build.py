@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=28"
+CSSV = "styles.css?v=29"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=15"
 
@@ -377,7 +377,7 @@ def footer():
 <div class="wrap foot-grid">
   <div class="foot-brand">
     {brandmark("brand-foot")}
-    <p>A locally owned smoke &amp; vape shop in {CITY}. Vapes, hookah, glass, cigars, and accessories, all in one spot.</p>
+    <p>A locally owned smoke &amp; vape shop in {CITY}. Vapes, hookah, glass, cigars, and accessories, <span class="nowrap">all in one spot</span>.</p>
     <div class="foot-social">
       <a href="{IG}" target="_blank" rel="noopener" aria-label="Instagram">Instagram</a>
       <a href="{REVIEW}" target="_blank" rel="noopener" aria-label="Review us on Google">Review us on Google</a>

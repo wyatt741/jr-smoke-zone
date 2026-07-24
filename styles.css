@@ -498,6 +498,7 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
 
 /* ---- chat widget (deterministic assistant, see chat.js) ---- */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.nowrap{white-space:nowrap}
 .cw{position:fixed;right:22px;bottom:22px;z-index:var(--z-nav);font-family:var(--body)}
 /* proactive nudge: small speech bubble over the launcher, fired once per session */
 .cw-nudge{position:absolute;right:3px;bottom:74px;display:flex;align-items:flex-start;max-width:236px;
