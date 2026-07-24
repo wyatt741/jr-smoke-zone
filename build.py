@@ -109,7 +109,7 @@ def local_business_ld():
         "telephone": PHONE_TEL,
         "image": OG_IMG,
         "logo": f"{BASE}/{LOGO}",
-        "priceRange": "$$",
+        "priceRange": "$",
         "address": {"@type": "PostalAddress", "streetAddress": "2616 Ventura Blvd",
                     "addressLocality": "Camarillo", "addressRegion": "CA",
                     "postalCode": "93010", "addressCountry": "US"},
