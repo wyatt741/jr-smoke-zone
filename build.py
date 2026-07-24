@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=17"
+CSSV = "styles.css?v=18"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=11"
 
@@ -342,11 +342,10 @@ def footer():
 
 # ============================ PAGES ============================
 def home():
-    # double-bezel: outer shell (.bezel) + inner core (.bezel-in), concentric radii
-    # last tile widens when the count would otherwise leave a hole in the 6-col grid
-    wide = " bento-wide" if (len(PRODUCTS) - 1) % 2 else ""
+    # double-bezel: outer shell (.bezel) + inner core (.bezel-in), concentric radii.
+    # uniform 4-up grid (8 tiles = 2 even rows) - no oversized hero tile
     prods = "".join(
-        f'''<a class="svc bezel{wide if p is PRODUCTS[-1] else ""}" href="products.html#{p[0]}"><span class="bezel-in svc-in">
+        f'''<a class="svc bezel" href="products.html#{p[0]}"><span class="bezel-in svc-in">
         <span class="ic-badge">{icon(p[0])}</span>
         <span class="svc-copy"><h3>{p[1]}</h3><p>{p[3]}</p>
         <span class="svc-more">See more<span class="btn-ic">&rarr;</span></span></span></span></a>'''

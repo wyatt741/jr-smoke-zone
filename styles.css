@@ -188,29 +188,16 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
   box-shadow:inset 0 1px 0 var(--core-hi);overflow:hidden}
 .bezel:hover{transform:translateY(-6px);box-shadow:var(--shadow)}
 
-/* ---- asymmetrical bento (replaces the symmetrical 3-col grid) ---- */
-.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:18px;grid-auto-rows:minmax(0,auto)}
-.bento>*:nth-child(1){grid-column:span 4;grid-row:span 2}
-.bento>*:nth-child(n+2){grid-column:span 2}
-.bento>.bento-wide{grid-column:span 4}
-.svc-in{padding:28px 26px 24px;display:flex;flex-direction:column}
-.svc-copy{display:block}
-.svc-more{align-self:flex-start}
+/* ---- category grid (uniform 4-up, even rows - 8 tiles = 2 clean rows) ---- */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.svc-in{padding:28px 26px 24px;display:flex;flex-direction:column;height:100%}
+.svc-copy{display:flex;flex-direction:column;flex:1}
 .svc-in::before{content:"";position:absolute;inset:0 0 auto 0;height:2px;background:var(--grad);
   transform:scaleX(0);transform-origin:left;transition:transform .7s cubic-bezier(.32,.72,0,1)}
 .svc:hover .svc-in::before{transform:scaleX(1)}
 .svc h3{font-size:1.22rem;margin-bottom:8px}
-.svc p{color:var(--muted);font-size:.96rem}
-/* the lead bento tile gets more presence */
-.bento>*:nth-child(1) .svc-in{padding:40px 36px 34px;justify-content:space-between}
-.bento>*:nth-child(1) .svc-in::after{content:"";position:absolute;right:-70px;top:-70px;width:340px;height:340px;
-  border-radius:50%;background:radial-gradient(circle,rgba(103,173,232,.13),transparent 66%);pointer-events:none}
-.bento>*:nth-child(1) .svc-copy{position:relative}
-.bento>*:nth-child(1) h3{font-size:1.9rem;margin-bottom:12px}
-.bento>*:nth-child(1) p{font-size:1.08rem;max-width:38ch}
-.bento>*:nth-child(1) .ic-badge{width:64px;height:64px;border-radius:19px;margin-bottom:22px}
-.bento>*:nth-child(1) .ic-badge .ic-svg{width:31px;height:31px}
-.svc-more{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-family:var(--disp);font-weight:700;color:var(--accent-text);font-size:.9rem}
+.svc p{color:var(--muted);font-size:.96rem;margin-bottom:16px}
+.svc-more{display:inline-flex;align-self:flex-start;align-items:center;gap:6px;margin-top:auto;font-family:var(--disp);font-weight:700;color:var(--accent-text);font-size:.9rem}
 .svc-more .btn-ic{width:20px;height:20px;background:var(--band);color:var(--accent-text)}
 /* nested double-bezel icon badge */
 .ic-badge{position:relative;width:54px;height:54px;border-radius:16px;display:grid;place-items:center;margin-bottom:18px;
@@ -426,11 +413,8 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   .svc-row-flip .svc-row-art{order:-1}
   .art-panel{max-width:460px;margin:0 auto;width:100%}
   .bento{grid-template-columns:repeat(2,1fr)}
-  .bento>*:nth-child(1){grid-column:span 2;grid-row:span 1}
-  .bento>*:nth-child(n+2){grid-column:span 1}
   .feat-grid{grid-template-columns:1fr 1fr}
   .feat-grid>*:nth-child(even){margin-top:0}
-  .bento>*:nth-child(1) h3{font-size:1.5rem}
   .visit-form{position:static}
   .foot-grid{grid-template-columns:1fr 1fr}
   .cta-card{padding:40px}
@@ -461,9 +445,6 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   .map-sec iframe{height:300px}
   .bento,.feat-grid,.visit-info,.prod-grid{grid-template-columns:1fr}
   .prod-body{padding:22px 22px 24px}
-  .bento>*:nth-child(1),.bento>*:nth-child(n+2){grid-column:span 1;grid-row:span 1}
-  .bento>*:nth-child(1) .svc-in{padding:28px 24px}
-  .bento>*:nth-child(1) h3{font-size:1.32rem}
   .shout-in{padding:26px 20px}
   .vcard-in,.svc-in,.feat-in{padding:22px}
   .ig-grid{grid-template-columns:1fr 1fr;gap:12px}
