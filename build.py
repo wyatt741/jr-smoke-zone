@@ -21,7 +21,7 @@ import json
 # ---- cache-busting (bump on any css/js change) ----
 CSSV = "styles.css?v=23"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=13"
+CHATV= "chat.js?v=14"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'

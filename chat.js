@@ -153,6 +153,11 @@
   function linkify(s) {                                     // AI text -> safe HTML with links
     s = s.replace(/\s*—\s*/g, ', ').replace(/–/g, '-');     // no em dashes; en dashes -> hyphens (house style)
     s = esc(s);
+    // markdown bold -> <strong>. Safe: esc() already ran, and '*' isn't escaped, so the
+    // captured text is escaped-clean; we only add <strong> tags around it. (The model likes
+    // to bold category names.) Also drop leading "- " bullets to a clean middot.
+    s = s.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+    s = s.replace(/^[ \t]*[-*]\s+/gm, '&bull; ');
     s = s.replace(/\bhttps?:\/\/[^\s<]+/g, function (u) {
       return '<a href="' + u + '" target="_blank" rel="noopener">' + u.replace(/^https?:\/\//, '') + '</a>';
     });
