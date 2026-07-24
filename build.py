@@ -6,8 +6,8 @@ Edit CONTENT here, never hand-edit the generated HTML. Deploy = git push.
 Follows the site-template recipe (../site-template/PLAYBOOK.md): one generator,
 cache-busted assets, dark default + theme toggle, IntersectionObserver reveal
 motion, glass nav. Themed black/blue/gray from the owner's logo (--blue #67ade8
-sampled from the scorpion artwork). Product sections stay line-icon driven; real
-photos live in the Instagram gallery (see LICENSES.md for provenance).
+sampled from the scorpion artwork). Products page uses Pexels stock photography;
+the home 'From the shop' gallery uses the shop's own Instagram photos (see LICENSES.md).
 
 Non-negotiables baked in: 21+ age gate (age_gate() + app.js), FDA nicotine
 warning in the footer, NO fabricated ratings/reviews/stats (real Yelp rating
@@ -124,7 +124,7 @@ PRODUCTS = [
   "Hookahs, shisha, and everything for the session.",
   "Full hookah setups and the shisha, hoses, bowls, and coals to go with them. Grab a whole kit or just restock the essentials.",
   ["Hookahs & kits", "Shisha / flavored tobacco", "Bowls & hoses", "Coals & accessories"]),
- ("pipe", "Glass Pipes", "assets/ig/Cj6NQc6goUQ.jpg",
+ ("pipe", "Glass Pipes", "assets/products/pipe.jpg",
   "A deep glass selection - the thing folks come back for.",
   "The glass wall is what regulars rave about. Hand pipes and glass in a range of styles and price points, from simple daily pieces to standout ones.",
   ["Hand pipes", "Chillums & one-hitters", "Colored & worked glass", "Everyday to premium"]),

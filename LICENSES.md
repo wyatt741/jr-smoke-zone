@@ -63,10 +63,11 @@ Each was downloaded, cropped to 5:4 and re-encoded at q82 — none are hotlinked
 | `assets/products/papers.jpg` | 29474378 | https://www.pexels.com/photo/29474378/ |
 | `assets/products/gear.jpg` | 19901864 | https://www.pexels.com/photo/19901864/ |
 | `assets/products/apparel.jpg` | 581339 | https://www.pexels.com/photo/581339/ |
+| `assets/products/pipe.jpg` | 19819497 | https://www.pexels.com/photo/19819497/ |
 
-**Glass Pipes deliberately uses the shop's OWN interior photo**
-(`assets/ig/Cj6NQc6goUQ.jpg`) rather than stock — it shows their actual product wall,
-which is the thing reviewers single out. Real beats stock where real exists.
+**Products page is entirely stock** (per Wyatt, 2026-07-23: keep the shop's own photos
+off the Products page). The shop's real Instagram photos still appear in the home
+"From the shop" gallery, which is meant to show the live feed — that is a separate section.
 
 ### Editorial rules applied when selecting
 1. **Product-first, no people smoking.** Lifestyle shots of people mid-smoke were rejected.
