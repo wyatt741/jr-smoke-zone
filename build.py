@@ -19,9 +19,9 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=23"
+CSSV = "styles.css?v=25"
 JSV  = "app.js?v=1"
-CHATV= "chat.js?v=14"
+CHATV= "chat.js?v=15"
 
 # ---- dark-mode default + no-FOUC theme + age-gate state (runs before paint) ----
 BOOT = ('<script>(function(){try{'
@@ -52,6 +52,7 @@ ICON = {
  "bong":   _svg('<path d="M10 3h4v4l3.2 6.4a4 4 0 0 1-3.6 5.8H10.4a4 4 0 0 1-3.6-5.8L10 7z"/><path d="M9 8h6"/>'),
  "cigar":  _svg('<rect x="3" y="10" width="15" height="4" rx="2"/><path d="M18 11.2l2.2-1M18 12.8l2.2 1"/>'),
  "gear":   _svg('<circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.2 5.2l2.1 2.1M16.7 16.7l2.1 2.1M18.8 5.2l-2.1 2.1M7.3 16.7l-2.1 2.1"/>'),
+ "pouch":  _svg('<ellipse cx="12" cy="8" rx="7.5" ry="3.2"/><path d="M4.5 8v5.6c0 1.77 3.36 3.2 7.5 3.2s7.5-1.43 7.5-3.2V8"/><path d="M9.4 8.2h5.2"/>'),
  # amenities / why-visit
  "pin":    _svg('<path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="2.5"/>'),
  "store":  _svg('<path d="M3 9l1.2-5h15.6L21 9M4.5 9v11h15V9M4.5 9h15M9 20v-6h6v6"/>'),
@@ -73,7 +74,7 @@ def icon(name): return ICON.get(name, "")
 
 # ---- business facts (verified from Yelp 2026-07-23; do NOT fabricate anything else) ----
 BIZ    = "JR Smoke Zone"
-TAG    = "Camarillo's neighborhood smoke & vape shop"
+TAG    = "Camarillo's neighborhood smoke shop"   # share-link/title voice ("vape" assumed); product keywords stay in the meta description + schema
 CITY   = "Camarillo, CA"
 ADDR   = "2616 Ventura Blvd, Camarillo, CA 93010"
 IG     = "https://www.instagram.com/jrsmokezone/"
@@ -165,6 +166,10 @@ PRODUCTS = [
   "Devices, pods, disposables, and e-liquid.",
   "Vape devices, pods, disposables, and e-liquid. New to it or dialing in a setup, the staff will point you the right way toward what California lets us carry.",
   ["Vape devices & pods", "Disposables", "E-liquid & salts", "Coils & pods"]),
+ ("pouch", "Nicotine Pouches", "assets/products/pouches.jpg",
+  "Tobacco-free pouches like Zyn.",
+  "Tobacco-free nicotine pouches that tuck under the lip, like Zyn. California restricts flavored pouches, so we carry the forms the state allows. Call or text and the staff will say what's in stock.",
+  ["Tobacco-free", "Like Zyn", "CA-allowed forms", "Ask about strengths"]),
  ("hookah", "Hookah", "assets/products/hookah.jpg",
   "Hookahs, shisha, and everything for the session.",
   "Full hookah setups and the shisha, hoses, bowls, and coals to go with them. Grab a whole kit or just restock the essentials.",
@@ -429,7 +434,7 @@ def home():
     <h1>Your neighborhood <span class="hl">smoke shop</span></h1>
     <div class="hero-visit">
       <p class="hv-lead">Swing by the shop.</p>
-      <address class="hv-addr">{ADDR}</address>
+      <address class="hv-addr"><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a></address>
       <p class="hv-hours"><span class="hc-dot"></span>Open {HOURS_SHORT}</p>
       <p class="hv-ask">Questions? <a href="#" data-open-chat>Ask our assistant<span class="btn-ic">&rarr;</span></a></p>
     </div>
@@ -522,7 +527,7 @@ def visit():
     <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("pin")}</span>
       <h3>Address</h3>
-      <p>{ADDR}</p>
+      <p><a class="addr-link" href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a></p>
       <a class="btn btn-primary cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
     </div></div>
     <div class="vcard bezel"><div class="bezel-in vcard-in">

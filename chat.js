@@ -14,6 +14,7 @@
   var telLink  = '<a href="tel:' + D.tel + '">' + D.phone + '</a>';
   var smsLink  = '<a href="sms:' + D.tel + '">text us</a>';   // shop takes texts; warmer than email
   var mapsLink = '<a href="' + D.maps + '" target="_blank" rel="noopener">get directions</a>';
+  var addrLink = '<a href="' + D.maps + '" target="_blank" rel="noopener">' + D.addr + '</a>';  // the address itself opens maps
 
   // ---- "are you open right now?" from the real per-day hours -------------------
   function parseTime(s) {                       // "9am" -> 9, "10:30pm" -> 22.5
@@ -55,13 +56,13 @@
     }],
     [/\b(hour|hours|open|close|closed|closing|opening|today|tonight|time)\b/i, hoursAnswer],
     [/\b(where|address|located|location|direction|directions|find you|parking|map)\b/i, function () {
-      return "We're at <strong>" + D.addr + '</strong>.<br><br>You can ' + mapsLink + '.';
+      return "We're at <strong>" + addrLink + '</strong>.<br><br>Tap the address or ' + mapsLink + '.';
     }],
     [/\b(phone|call|number|contact|text|reach)\b/i, function () {
       return 'Call ' + telLink + ' or ' + smsLink + ', during shop hours.<br>Email: <a href="mailto:' + D.email + '">' + D.email + '</a>';
     }],
     [/\b(online|ship|shipping|deliver|delivery|order|website order|buy online)\b/i, function () {
-      return 'We do not sell online, it is an in-store shop only. Come see us at ' + D.addr + ' and you can ' + mapsLink + '.';
+      return 'We do not sell online, it is an in-store shop only. Come see us at ' + addrLink + '.';
     }],
     // broad on purpose: age/ID is the compliance question, better over- than under-matched
     // "do you card" = ID check; "do you take card" = payment. Order matters: this runs
@@ -111,14 +112,14 @@
       return "Hey. Ask me about hours, directions, or what we carry.";
     }],
     [/\b(thank|thanks|thx|appreciate|cheers)\b/i, function () {
-      return 'Anytime. Come see us at ' + D.addr + '.';
+      return 'Anytime. Come see us at ' + addrLink + '.';
     }]
   ];
 
   function answer(text) {
     for (var i = 0; i < INTENTS.length; i++) if (INTENTS[i][0].test(text)) return INTENTS[i][1]();
     return "I am not sure about that one. The staff can help - call " + telLink +
-           ', or come by ' + D.addr + '.<br><br>Try asking about <em>hours</em>, <em>directions</em>, or <em>what we carry</em>.';
+           ', or come by ' + addrLink + '.<br><br>Try asking about <em>hours</em>, <em>directions</em>, or <em>what we carry</em>.';
   }
 
   // ---- rendering ----------------------------------------------------------------
@@ -164,6 +165,13 @@
     s = s.replace(/\(?\b\d{3}\)?[\s.\-]?\d{3}[\s.\-]?\d{4}\b/g, function (p) {
       return '<a href="tel:' + p.replace(/[^\d+]/g, '') + '">' + p + '</a>';
     });
+    // the street address (however the model phrases it) opens maps. Runs LAST so the maps
+    // href we insert isn't re-caught by the URL linkifier above.
+    var street = (D.addr || '').split(',')[0];               // "2616 Ventura Blvd"
+    if (street) {
+      var re = new RegExp(street.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+      s = s.replace(re, '<a href="' + D.maps + '" target="_blank" rel="noopener">' + street + '</a>');
+    }
     return s.replace(/\n/g, '<br>');
   }
   function typingEl() {

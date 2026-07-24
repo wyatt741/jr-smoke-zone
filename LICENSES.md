@@ -65,6 +65,15 @@ Each was downloaded, cropped to 5:4 and re-encoded at q82 — none are hotlinked
 | `assets/products/apparel.jpg` | 581339 | https://www.pexels.com/photo/581339/ |
 | `assets/products/pipe.jpg` | 19819497 | https://www.pexels.com/photo/19819497/ |
 
+**Pixabay stock** (one image), used under the [Pixabay Content License](https://pixabay.com/service/license-summary/)
+(free for commercial use, no attribution required). Chosen deliberately: it shows loose
+unbranded pouches with **no brand and no flavor name** — the only compliant option, since
+every nicotine-pouch photo on Pexels shows a California-banned flavored tin (mint, lemon).
+
+| File | Pixabay ID | Source |
+|------|-----------|--------|
+| `assets/products/pouches.jpg` | 6255212 | https://pixabay.com/photos/modern-oral-nicotine-pouches-6255212/ |
+
 **Products page is entirely stock** (per Wyatt, 2026-07-23: keep the shop's own photos
 off the Products page). The shop's real Instagram photos still appear in the home
 "From the shop" gallery, which is meant to show the live feed — that is a separate section.
