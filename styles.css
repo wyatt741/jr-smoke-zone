@@ -210,8 +210,7 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 [data-theme="dark"] .ic-badge{box-shadow:var(--shadow-soft),inset 0 1px 0 rgba(255,255,255,.08)}
 
 /* ---- features (offset rhythm breaks the flat 4-up row) ---- */
-.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:start}
-.feat-grid>*:nth-child(even){margin-top:30px}   /* margin, not transform: no hover conflict */
+.feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;align-items:stretch}
 .feat-in{padding:28px 24px}
 .feat h3{font-size:1.12rem;margin-bottom:6px}
 .feat p{color:var(--muted);font-size:.94rem}
@@ -414,7 +413,6 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   .art-panel{max-width:460px;margin:0 auto;width:100%}
   .bento{grid-template-columns:repeat(2,1fr)}
   .feat-grid{grid-template-columns:1fr 1fr}
-  .feat-grid>*:nth-child(even){margin-top:0}
   .visit-form{position:static}
   .foot-grid{grid-template-columns:1fr 1fr}
   .cta-card{padding:40px}
