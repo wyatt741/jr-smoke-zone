@@ -150,7 +150,7 @@
   // href="..." - an un-escaped " in a jailbroken AI reply could otherwise break out.
   function esc(s) { return s.replace(/[<>&"']/g, function (c) { return { '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function linkify(s) {                                     // AI text -> safe HTML with links
-    s = s.replace(/\s*—\s*/g, ', ');                        // enforce the no-em-dash house rule
+    s = s.replace(/\s*—\s*/g, ', ').replace(/–/g, '-');     // no em dashes; en dashes -> hyphens (house style)
     s = esc(s);
     s = s.replace(/\bhttps?:\/\/[^\s<]+/g, function (u) {
       return '<a href="' + u + '" target="_blank" rel="noopener">' + u.replace(/^https?:\/\//, '') + '</a>';
