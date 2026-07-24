@@ -13,6 +13,7 @@
   /* double-bezel shell tokens (outer tray the inner core sits in) */
   --shell:rgba(12,17,24,.04); --shell-line:rgba(12,17,24,.07); --core-hi:rgba(255,255,255,.7);
   --menu-veil:rgba(255,255,255,.86);
+  --logo-halo:rgba(9,13,20,.9);   /* light theme: dark halo so the white lettering reads */
   --disp:'Bricolage Grotesque',system-ui,sans-serif; --body:'Plus Jakarta Sans',system-ui,sans-serif;
   --wrap:1200px; --r:16px; --r-lg:24px; --r-xl:32px;
   --r-bez:34px; --r-core:calc(34px - 7px);   /* concentric: core radius = shell - padding */
@@ -153,17 +154,20 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .hc-age{position:absolute;top:-13px;right:20px;font-family:var(--disp);font-weight:800;font-size:.78rem;letter-spacing:.04em;
   background:var(--blue);color:var(--on-accent);padding:6px 14px;border-radius:100px;box-shadow:0 10px 22px -10px rgba(103,173,232,.7)}
 
-/* ---- hero logo showcase (real scorpion logo on a black tile) ---- */
-.hero-logo{display:grid;gap:16px;justify-items:center}
-.logo-tile{position:relative;width:100%;max-width:520px;background:#000;border:1px solid var(--line-2);
-  border-radius:var(--r-xl);padding:20px;box-shadow:var(--shadow);overflow:hidden}
-.logo-tile::before{content:"";position:absolute;inset:0;background:radial-gradient(70% 60% at 50% 42%,rgba(103,173,232,.20),transparent 70%)}
-.logo-tile img{position:relative;width:100%;height:auto}
-.logo-facts{display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;font-size:.9rem;color:var(--muted)}
+/* ---- hero logo showcase (transparent scorpion logo, soft glow, no square) ---- */
+.hero-logo{position:relative;display:grid;gap:18px;justify-items:center}
+/* soft radial glow behind the transparent logo - gives the white lettering contrast in
+   light mode and a blue halo in dark, with NO hard square edge */
+.hero-logo::before{content:"";position:absolute;left:50%;top:44%;width:118%;aspect-ratio:1;
+  transform:translate(-50%,-50%);border-radius:50%;z-index:0;pointer-events:none;
+  background:radial-gradient(closest-side,var(--logo-halo),transparent 72%)}
+.hero-mark{position:relative;z-index:1;width:100%;max-width:480px;height:auto;
+  filter:drop-shadow(0 18px 40px rgba(0,0,0,.45))}
+.logo-facts{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;font-size:.9rem;color:var(--muted)}
 .lf-open{display:inline-flex;align-items:center;gap:9px;font-family:var(--disp);font-weight:700;color:var(--ink);font-size:.95rem}
 /* nav/footer brand mark */
 .brand{gap:10px}
-.brand-ic{height:36px;width:auto;flex-shrink:0}
+.brand-ic{height:40px;width:auto;flex-shrink:0}
 .brand-foot .brand-ic{height:42px}
 
 /* ---- keyword marquee (image-free) ---- */
@@ -229,6 +233,20 @@ body.menu-open .burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45
 .art-photo .bezel-in{aspect-ratio:5/4}
 .art-photo img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.32,.72,0,1)}
 .art-photo:hover img{transform:scale(1.04)}
+
+/* ---- products page: 2-up card grid (photo on top, copy below) ---- */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.prod-card{scroll-margin-top:100px}
+.prod-card .bezel-in{display:flex;flex-direction:column;height:100%}
+.prod-photo{aspect-ratio:16/10;overflow:hidden;flex-shrink:0}
+.prod-photo img{width:100%;height:100%;object-fit:cover;transition:transform .9s cubic-bezier(.32,.72,0,1)}
+.prod-card:hover .prod-photo img{transform:scale(1.05)}
+.prod-body{padding:28px 30px 30px;display:flex;flex-direction:column;flex:1}
+.prod-head{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.prod-head .ic-badge{margin-bottom:0;width:48px;height:48px;flex-shrink:0}
+.prod-head h2{font-size:clamp(1.35rem,2.4vw,1.7rem)}
+.prod-body>p{color:var(--muted);font-size:1.02rem;margin-bottom:20px}
+.prod-body .ticks{margin-bottom:0}
 
 /* ---- shout-out card (real attributed quote, not a rating) ---- */
 .shout{max-width:740px;margin:6px auto 0}
@@ -343,7 +361,7 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
 :root[data-age="ok"] .agegate{display:none}
 .ag-card{max-width:460px;text-align:center;background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-xl);
   padding:44px 36px;box-shadow:var(--shadow)}
-.ag-logo{width:200px;max-width:66%;margin:0 auto 22px;border-radius:18px;background:#000;display:block}
+.ag-logo{width:190px;max-width:64%;margin:0 auto 22px;display:block;filter:drop-shadow(0 10px 26px rgba(0,0,0,.4))}
 .ag-card h2{font-size:1.9rem;margin-bottom:12px}
 .ag-card>p{color:var(--muted);font-size:1.02rem;margin-bottom:26px}
 .ag-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
@@ -439,7 +457,8 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   .vcard{padding:22px}
   .ag-card{padding:32px 22px}
   .map-sec iframe{height:300px}
-  .bento,.feat-grid,.visit-info{grid-template-columns:1fr}
+  .bento,.feat-grid,.visit-info,.prod-grid{grid-template-columns:1fr}
+  .prod-body{padding:22px 22px 24px}
   .bento>*:nth-child(1),.bento>*:nth-child(n+2){grid-column:span 1;grid-row:span 1}
   .bento>*:nth-child(1) .svc-in{padding:28px 24px}
   .bento>*:nth-child(1) h3{font-size:1.32rem}
@@ -465,6 +484,7 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   /* Ethereal Glass: vantablack tray, white/8 hairline, inner top highlight */
   --shell:rgba(255,255,255,.035); --shell-line:rgba(255,255,255,.08); --core-hi:rgba(255,255,255,.07);
   --menu-veil:rgba(5,6,9,.88);
+  --logo-halo:rgba(103,173,232,.18);   /* dark theme: soft blue halo, not a box */
   --shadow:0 24px 55px -30px rgba(0,0,0,.75); --shadow-soft:0 16px 40px -26px rgba(0,0,0,.55);
 }
 [data-theme="dark"] .nav-in{box-shadow:var(--shadow-soft),inset 0 1px 0 rgba(255,255,255,.06)}
@@ -491,7 +511,7 @@ footer{background:var(--night);color:#c3ccc5;padding:0 0 28px}
   border-radius:var(--r-lg);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden}
 .cw-panel[hidden]{display:none}
 .cw-head{display:flex;align-items:center;gap:10px;padding:12px 13px;background:var(--night);color:#fff}
-.cw-avatar{width:34px;height:34px;border-radius:10px;background:#000;flex-shrink:0}
+.cw-avatar{width:34px;height:34px;border-radius:10px;background:transparent;flex-shrink:0;object-fit:contain}
 .cw-head-t{display:flex;flex-direction:column;line-height:1.25;flex:1;min-width:0}
 .cw-head-t strong{font-family:var(--disp);font-size:.96rem}
 .cw-head-t span{font-size:.74rem;color:#b6c2d2;display:flex;align-items:center;gap:6px}

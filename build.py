@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=15"
+CSSV = "styles.css?v=16"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=5"
 
@@ -33,11 +33,13 @@ SUN    = '<svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12
 MOON   = '<svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5Z"/></svg>'
 TOGGLE = f'<button class="theme-toggle" type="button" aria-label="Toggle dark mode" title="Toggle theme">{SUN}{MOON}</button>'
 
-# real logo assets (scorpion), generated from the owner's logo PDF into assets/
+# brand art, both TRANSPARENT-background cutouts of the owner's logo (no black square):
+#   MARK = scorpion only        -> nav/footer (text would be illegible at that size), favicon
+#   LOGO = full logo + arched "JR. Smoke Zone" lettering -> hero + age gate
 # favicons cache HARD - bump ICOV and close the tab to see a change (playbook §5/§10)
-ICOV = "?v=1"
-MARK = "assets/mark.png"   # scorpion-only, for the nav/footer brand
-LOGO = "assets/logo.png"   # full logo, for the hero showcase
+ICOV = "?v=2"
+MARK = "assets/mark.png"
+LOGO = "assets/logo.png"
 
 # ---- ultra-light line icons (no emoji - premium feel per high-end-visual-design) ----
 def _svg(p):
@@ -212,8 +214,8 @@ def head(title, desc, page=""):
 
 def brandmark(cls=""):
     return (f'<a class="brand {cls}" href="index.html" aria-label="{BIZ} home">'
-            f'<img class="brand-ic" src="{MARK}" alt="" width="36" height="36">'
-            f'<span class="wordmark"><span class="wm-jr">JR.</span> Smoke Zone</span></a>')
+            f'<img class="brand-ic" src="{MARK}" alt="" width="40" height="40">'
+            f'<span class="wordmark"><span class="wm-jr">JR</span> Smoke Zone</span></a>')
 
 def nav(active):
     links = "".join(
@@ -233,7 +235,7 @@ def age_gate():
     # "Yes" persists + reveals; "No" leaves the site. Wired in app.js.
     return f'''<div class="agegate" id="agegate" role="dialog" aria-modal="true" aria-labelledby="ag-title">
   <div class="ag-card">
-    <img class="ag-logo" src="{LOGO}" alt="{BIZ}" width="200" height="200">
+    <img class="ag-logo" src="{LOGO}" alt="{BIZ}" width="190" height="190">
     <h2 id="ag-title">Are you 21 or older?</h2>
     <p>You must be at least 21 years of age to enter this site. Tobacco and vapor products are for adults 21+ only.</p>
     <div class="ag-btns">
@@ -367,7 +369,7 @@ def home():
     </div>
   </div>
   <aside class="hero-logo reveal d1">
-    <div class="logo-tile"><img src="{LOGO}" alt="{BIZ} logo" width="520" height="520"></div>
+    <img class="hero-mark" src="{LOGO}" alt="{BIZ}" width="480" height="480">
     <div class="logo-facts">
       <span class="lf-open"><span class="hc-dot"></span>Open 7 days on Ventura Blvd</span>
       <span>{HOURS_SHORT}</span>
@@ -414,16 +416,16 @@ def home():
 {visit_cta()}{footer()}'''
 
 def products():
-    rows = ""
-    for i, (ic, title, photo, short, long, items) in enumerate(PRODUCTS):
-        li = "".join(f"<li>{x}</li>" for x in items)
-        flip = " svc-row-flip" if i % 2 else ""
-        rows += f'''<section class="section svc-row{flip}" id="{ic}"><div class="wrap svc-row-in">
-        <div class="svc-row-art reveal"><div class="art-photo bezel"><span class="bezel-in"><img src="{photo}" alt="{title} at {BIZ}" loading="lazy" width="900" height="720"></span></div></div>
-        <div class="svc-row-copy reveal"><span class="ic-badge ic-badge-lg">{icon(ic)}</span><h2>{title}</h2>
-        <p>{long}</p><ul class="ticks">{li}</ul>
-        <a class="btn btn-primary cta-anim" href="visit.html">Come see it<span class="btn-ic">&rarr;</span></a></div>
-      </div></section>'''
+    # 2-up card grid: photo on top, then icon + title + copy + bullets. No per-card CTA
+    # (one closing band covers it). id on each card so home's "See more" links land here.
+    cards = "".join(
+        f'''<article class="prod-card bezel reveal" id="{ic}"><div class="bezel-in">
+        <div class="prod-photo"><img src="{photo}" alt="{title} at {BIZ}" loading="lazy" width="900" height="720"></div>
+        <div class="prod-body">
+          <div class="prod-head"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2></div>
+          <p>{long}</p><ul class="ticks">{"".join(f"<li>{x}</li>" for x in items)}</ul>
+        </div></div></article>'''
+        for ic, title, photo, short, long, items in PRODUCTS)
     return head(f"Products | {BIZ}",
         f"Vapes and e-liquid, hookah, glass pipes, bongs, cigars, and accessories at {BIZ} in {CITY}.",
         "products") + nav("products.html") + f'''
@@ -432,11 +434,8 @@ def products():
   <span class="eyebrow">Products</span><h1>What's on the wall</h1>
   <p>Everything a locally owned smoke &amp; vape shop should have, under one roof in {CITY.split(",")[0]}. It's a brochure, not a store, so no online sales. Come in and see it in person.</p>
 </div></section>
-{rows}
-<section class="section band"><div class="wrap">
-  <div class="sec-head center reveal"><span class="eyebrow">Not sure what you need?</span><h2>Just come in and ask</h2>
-    <p>New to vaping, chasing a specific piece of glass, or restocking hookah supplies - tell the staff what you're after and they'll walk you through it.</p></div>
-  <div class="center reveal"><a class="btn btn-primary btn-lg cta-anim" href="visit.html">Plan your visit<span class="btn-ic">&rarr;</span></a></div>
+<section class="section" style="padding-top:40px"><div class="wrap">
+  <div class="prod-grid stagger reveal">{cards}</div>
 </div></section>
 </main>{visit_cta()}{footer()}'''
 
@@ -497,7 +496,7 @@ def visit():
 </div></section>
 
 <section class="map-sec"><iframe src="{MAP_EMBED}" title="{BIZ} location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></section>
-</main>{visit_cta()}{footer()}'''
+</main>{footer()}'''
 
 # ============================ BUILD ============================
 PAGES = {"index.html": home, "products.html": products, "visit.html": visit}
