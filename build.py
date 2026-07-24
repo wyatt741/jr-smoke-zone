@@ -436,7 +436,7 @@ def home():
       <p class="hv-lead">Swing by the shop.</p>
       <address class="hv-addr"><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a></address>
       <p class="hv-hours"><span class="hc-dot"></span>Open {HOURS_SHORT}</p>
-      <p class="hv-ask">Questions? <a href="#" data-open-chat>Ask our assistant</a> or call <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p>
+      <p class="hv-ask">Questions? <a href="#" data-open-chat>Ask our assistant</a> or call <a href="tel:{PHONE_TEL}">{PHONE}</a></p>
     </div>
     <div class="hero-btns">
       <a class="btn btn-primary btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
