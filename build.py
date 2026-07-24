@@ -415,8 +415,8 @@ def home():
 <section class="hero"><div class="wrap hero-in">
   <div class="hero-copy reveal">
     <span class="eyebrow"><span class="dot"></span>Locally owned · {CITY}</span>
-    <h1>Your neighborhood <span class="hl">smoke &amp; vape</span> shop.</h1>
-    <p>{BIZ} is a locally owned spot on Ventura Blvd for vapes and e-liquid, hookah, glass, bongs, cigars, and accessories. Come in and the staff will sort you out.</p>
+    <h1>Your neighborhood <span class="hl">smoke shop</span></h1>
+    <p>We don't sell online, so come in and see it all in person.</p>
     <div class="hero-btns">
       <a class="btn btn-primary btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
       <a class="btn btn-ghost btn-lg" href="products.html">Browse products</a>
