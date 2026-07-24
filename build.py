@@ -19,7 +19,7 @@ Business facts verified from Yelp 2026-07-23. Placeholders marked TODO below.
 import json
 
 # ---- cache-busting (bump on any css/js change) ----
-CSSV = "styles.css?v=34"
+CSSV = "styles.css?v=35"
 JSV  = "app.js?v=1"
 CHATV= "chat.js?v=15"
 
@@ -461,18 +461,13 @@ def home():
 </div></section>
 
 <section class="section band"><div class="wrap">
-  <div class="sec-head center reveal"><span class="eyebrow">Why visit us</span><h2>A local shop that does it right</h2></div>
-  <div class="feat-grid stagger reveal">{feats}</div>
-</div></section>
-
-<section class="section"><div class="wrap">
   <div class="sec-head center reveal"><span class="eyebrow">From the shop</span><h2>Straight off the feed</h2>
     <p>Real shots from inside the store, plus the deals, giveaways, and events we run for the neighborhood.</p></div>
   <div class="ig-grid stagger reveal">{igtiles}</div>
   <div class="center" style="margin-top:34px"><a class="btn btn-primary btn-lg cta-anim" href="{IG}" target="_blank" rel="noopener">Follow &#64;jrsmokezone{icon("ig")}</a></div>
 </div></section>
 
-<section class="section band"><div class="wrap">
+<section class="section"><div class="wrap">
   <div class="sec-head center reveal"><span class="eyebrow">More than a smoke shop</span><h2>Part of the neighborhood</h2>
     <p>JR Smoke Zone runs in-store toy drives, 4/20 events, and giveaways with local businesses, right next to our sister store JR Liquor Mart on Ventura Blvd.</p></div>
   <figure class="shout bezel reveal"><div class="bezel-in shout-in">
@@ -482,6 +477,11 @@ def home():
       <a href="{IG_POST.format(SHOUTOUT["post"])}" target="_blank" rel="noopener">{SHOUTOUT["handle"]}{icon("ig")}</a>
     </figcaption>
   </div></figure>
+</div></section>
+
+<section class="section band"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">Why visit us</span><h2>A local shop that does it right</h2></div>
+  <div class="feat-grid stagger reveal">{feats}</div>
 </div></section>
 </main>
 {visit_cta()}{footer()}'''
