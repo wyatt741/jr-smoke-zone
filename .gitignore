@@ -3,3 +3,6 @@ __pycache__/
 Thumbs.db
 docs/
 Backups/
+
+.wrangler/
+worker/.wrangler/
