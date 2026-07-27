@@ -244,7 +244,8 @@ GALLERY = [
 ]
 IG_POST = "https://www.instagram.com/p/{}/"
 
-NAV = [("index.html", "Home"), ("products.html", "Products")]
+# one-page site: nav links are in-page anchors (old page URLs live on as redirect stubs)
+NAV = [("#top", "Home"), ("#products", "What we carry"), ("#contact", "Contact")]
 
 # ============================ SHARED CHROME ============================
 def head(title, desc, page=""):
@@ -293,10 +294,10 @@ def nav(active):
   {brandmark(badge=True)}
   <nav class="nav-links">{links}</nav>
   {TOGGLE}
-  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="contact.html">Contact Us<span class="btn-ic">&rarr;</span></a>
+  <a class="btn btn-primary btn-sm nav-cta cta-anim" href="#contact">Contact Us<span class="btn-ic">&rarr;</span></a>
   <button class="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
 </div></header></div>
-<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="contact.html">Contact Us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
+<div class="mobile-menu" id="mobile-menu">{mlinks}<a class="btn btn-primary cta-anim" href="#contact">Contact Us<span class="btn-ic">&rarr;</span></a>{TOGGLE}</div>'''
 
 def age_gate():
     # 21+ splash. Shown before paint unless localStorage age21=1 (set in BOOT -> data-age="ok").
@@ -357,18 +358,6 @@ def chat_widget():
   </div>
 </div>'''
 
-def visit_cta():
-    return f'''<section class="cta-band"><div class="wrap"><div class="cta-card reveal">
-  <div class="cta-copy">
-    <span class="eyebrow eyebrow-light">Come see us</span>
-    <h2>Swing by the shop.</h2>
-    <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p>
-  </div>
-  <div class="cta-btns">
-    <a class="btn btn-glow btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
-    <a class="btn btn-ghost-light btn-lg" href="tel:{PHONE_TEL}">Call the shop</a>
-  </div>
-</div></div></section>'''
 
 def footer():
     cols = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV) + '<a href="contact.html">Contact</a>'
@@ -406,33 +395,37 @@ def footer():
 
 # ============================ PAGES ============================
 def home():
-    # double-bezel: outer shell (.bezel) + inner core (.bezel-in), concentric radii.
-    # uniform 4-up grid (8 tiles = 2 even rows) - no oversized hero tile
-    prods = "".join(
-        f'''<a class="svc bezel" href="products.html#{p[0]}"><span class="bezel-in svc-in">
-        <span class="ic-badge">{icon(p[0])}</span>
-        <span class="svc-copy"><h3>{p[1]}</h3><p>{p[3]}</p>
-        <span class="svc-more">See more<span class="btn-ic">&rarr;</span></span></span></span></a>'''
-        for p in PRODUCTS)
+    # ONE-PAGE site: hero(#top) -> marquee -> products(#products, full cards) -> from the
+    # shop -> more than a smoke shop -> why visit us -> contact(#contact, info+form+map).
+    # products.html / contact.html live on as redirect stubs into #products / #contact.
+    cards = "".join(
+        f'''<article class="prod-card bezel reveal" id="{ic}"><div class="bezel-in">
+        <div class="prod-photo"><img src="{photo}" alt="{title} at {BIZ}" width="900" height="720"></div>
+        <div class="prod-body">
+          <div class="prod-head"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2></div>
+          <p>{long}</p><ul class="ticks">{"".join(f"<li>{x}</li>" for x in items)}</ul>
+        </div></div></article>'''
+        for ic, title, photo, short, long, items in PRODUCTS)
     feats = "".join(
         f'<div class="feat bezel"><div class="bezel-in feat-in"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div></div>'
         for k, t, d in FEATURES)
-    # marquee: product keywords + real carried brands, rendered twice for a seamless loop
+    # marquee: product keywords + real carried SAFE brands, rendered twice for a seamless loop
     chips = ["Vapes", "E-Liquid", "Nicotine Pouches", "Zyn", "Hookah", "Shisha", "Glass Pipes",
              "Empire Glassworks", "Bongs", "Puffco", "Zig-Zag", "RAW", "Cigars", "Grinders",
              "Santa Cruz Shredder", "Zippo", "Formula 420", "Accessories"]
-    row = "".join(f'<span class="mq-chip">{c}</span>' for c in chips)
-    marquee = row + row
+    marquee = "".join(f'<span class="mq-chip">{c}</span>' for c in chips) * 2
     igtiles = "".join(
         f'''<a class="ig-tile bezel" href="{IG_POST.format(code)}" target="_blank" rel="noopener">
         <span class="bezel-in ig-in">
         <img src="assets/ig/{code}.jpg" alt="{label} at {BIZ}" loading="lazy">
         <span class="ig-cap">{label}{icon("ig")}</span></span></a>''' for code, label in GALLERY)
+    hrows = "".join(f'<div class="hr-row"><span>{d}</span><strong>{h}</strong></div>' for d, h in HOUR_ROWS)
+    amen = "".join(f'<span class="amen"><span class="amen-ic">{icon(k)}</span>{t}</span>' for k, t in AMENITIES)
     return head(f"{BIZ} | {TAG}",
         f"Locally owned smoke & vape shop in {CITY}. Vapes, e-liquid, hookah, glass pipes, bongs, cigars, and accessories. Come visit us on Ventura Blvd.",
-        "home") + nav("index.html") + f'''
+        "home") + nav("#top") + f'''
 <main id="main">
-<section class="hero"><div class="wrap hero-in">
+<section class="hero" id="top"><div class="wrap hero-in">
   <div class="hero-copy reveal">
     <span class="eyebrow"><span class="dot"></span>Locally owned · {CITY}</span>
     <h1>Your neighborhood <span class="hl">smoke shop</span></h1>
@@ -444,7 +437,7 @@ def home():
     </div>
     <div class="hero-btns">
       <a class="btn btn-primary btn-lg cta-anim" href="{MAPS}" target="_blank" rel="noopener">Get directions<span class="btn-ic">&rarr;</span></a>
-      <a class="btn btn-ghost btn-lg" href="products.html">Browse products</a>
+      <a class="btn btn-ghost btn-lg" href="#products">Browse products</a>
     </div>
   </div>
   <aside class="hero-logo reveal d1">
@@ -457,11 +450,11 @@ def home():
   <div class="marquee"><div class="marquee-track">{marquee}</div></div>
 </div></section>
 
-<section class="section"><div class="wrap">
+<section class="section" id="products"><div class="wrap">
   <div class="sec-head center reveal"><span class="eyebrow">What we carry</span>
-    <h2>One shop, all of it</h2>
-    <p>From a fresh coil to a standout piece of glass, it's on the wall in {CITY.split(",")[0]}.</p></div>
-  <div class="bento stagger reveal">{prods}</div>
+    <h2>What's on the wall</h2>
+    <p>A deep glass wall, vapes and e-liquid, hookah, cigars, and every accessory to match. Come see the whole wall in person, it's better in your hands than on a screen.</p></div>
+  <div class="prod-grid stagger reveal">{cards}</div>
 </div></section>
 
 <section class="section band"><div class="wrap">
@@ -487,46 +480,11 @@ def home():
   <div class="sec-head center reveal"><span class="eyebrow">Why visit us</span><h2>A local shop that does it right</h2></div>
   <div class="feat-grid stagger reveal">{feats}</div>
 </div></section>
-</main>
-{visit_cta()}{footer()}'''
 
-def products():
-    # 2-up card grid: photo on top, then icon + title + copy + bullets. No per-card CTA
-    # (one closing band covers it). id on each card so home's "See more" links land here.
-    cards = "".join(
-        f'''<article class="prod-card bezel reveal" id="{ic}"><div class="bezel-in">
-        <div class="prod-photo"><img src="{photo}" alt="{title} at {BIZ}" width="900" height="720"></div>
-        <div class="prod-body">
-          <div class="prod-head"><span class="ic-badge">{icon(ic)}</span><h2>{title}</h2></div>
-          <p>{long}</p><ul class="ticks">{"".join(f"<li>{x}</li>" for x in items)}</ul>
-        </div></div></article>'''
-        for ic, title, photo, short, long, items in PRODUCTS)
-    return head(f"Products | {BIZ}",
-        f"Vapes and e-liquid, hookah, glass pipes, bongs, cigars, and accessories at {BIZ} in {CITY}.",
-        "products") + nav("products.html") + f'''
-<main id="main">
-<section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">Products</span><h1>What's on the wall</h1>
-  <p>A deep glass wall, vapes and e-liquid, hookah, cigars, and every accessory to match. Come see the whole wall in person, it's better in your hands than on a screen.</p>
-</div></section>
-<section class="section" style="padding-top:40px"><div class="wrap">
-  <div class="prod-grid stagger reveal">{cards}</div>
-</div></section>
-</main>{visit_cta()}{footer()}'''
-
-def visit():
-    hrows = "".join(f'<div class="hr-row"><span>{d}</span><strong>{h}</strong></div>' for d, h in HOUR_ROWS)
-    amen = "".join(f'<span class="amen"><span class="amen-ic">{icon(k)}</span>{t}</span>' for k, t in AMENITIES)
-    return head(f"Contact | {BIZ}",
-        f"Contact {BIZ} at {ADDR}. Hours, directions, phone, and a message form.",
-        "visit") + nav("contact.html") + f'''
-<main id="main">
-<section class="page-hero"><div class="wrap reveal">
-  <span class="eyebrow">Contact us</span><h1>Swing by the shop.</h1>
-  <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p>
-</div></section>
-
-<section class="section" style="padding-top:32px"><div class="wrap visit-in">
+<section class="section" id="contact"><div class="wrap">
+  <div class="sec-head center reveal"><span class="eyebrow">Contact us</span><h2>Swing by the shop.</h2>
+    <p><a href="{MAPS}" target="_blank" rel="noopener">{ADDR}</a><br>Open {HOURS_SHORT}<br>Questions? Call or text <a href="tel:{PHONE_TEL}">{PHONE}</a>.</p></div>
+  <div class="visit-in">
   <div class="visit-info reveal">
     <div class="vcard bezel"><div class="bezel-in vcard-in">
       <span class="ic-badge">{icon("pin")}</span>
@@ -572,34 +530,42 @@ def visit():
       <p class="form-fine">Prefer to talk? Call or text {PHONE}.</p>
     </form>
   </aside>
+  </div>
 </div></section>
 
 <section class="map-sec"><iframe src="{MAP_EMBED}" title="{BIZ} location map" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></section>
 </main>{footer()}'''
 
 # ============================ BUILD ============================
-PAGES = {"index.html": home, "products.html": products, "contact.html": visit}
+PAGES = {"index.html": home}   # one-page site
+# Old multi-page URLs live on as instant redirects into their one-page sections
+# (noindexed, canonical -> the front page, kept out of the sitemap).
+STUBS = {"products.html": ("#products", "Products"),
+         "contact.html":  ("#contact",  "Contact"),
+         "visit.html":    ("#contact",  "Contact")}   # legacy pre-rename URL too
+
+def stub(anchor, title):
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
+            f'<meta name="viewport" content="width=device-width,initial-scale=1">'
+            f'<title>{title} | {BIZ}</title><meta name="robots" content="noindex">'
+            f'<link rel="canonical" href="{BASE}/">'
+            f'<meta http-equiv="refresh" content="0;url=index.html{anchor}">'
+            f'</head><body><p>This page is now a section of the front page. '
+            f'<a href="index.html{anchor}">Continue to {BIZ}</a>.</p></body></html>')
 
 def sitemap():
-    # loc must match each page's <link rel=canonical>: home = bare domain, not /index.html
-    locs = [f"{BASE}/"] + [f"{BASE}/{p}" for p in PAGES if p != "index.html"]
-    urls = "".join(f"<url><loc>{u}</loc></url>" for u in locs)
-    return f'<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{urls}</urlset>'
-
-# the page moved visit.html -> contact.html; keep a redirect so old/shared links don't 404
-REDIRECT_STUB = (f'<!doctype html><html lang="en"><head><meta charset="utf-8">'
-                 f'<title>{BIZ}</title><link rel="canonical" href="{BASE}/contact.html">'
-                 f'<meta http-equiv="refresh" content="0; url=/contact.html">'
-                 f'<meta name="robots" content="noindex">'
-                 f'<script>location.replace("/contact.html")</script></head>'
-                 f'<body>Redirecting to <a href="/contact.html">Contact</a>.</body></html>')
+    # one page -> the bare domain (matches index.html's canonical)
+    return ('<?xml version="1.0" encoding="UTF-8"?>'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            f'<url><loc>{BASE}/</loc><priority>1.0</priority></url></urlset>')
 
 def build():
     for fn, f in PAGES.items():
         with open(fn, "w", encoding="utf-8") as fh:
             fh.write(f())
-    with open("visit.html", "w", encoding="utf-8") as fh:   # legacy URL -> contact.html
-        fh.write(REDIRECT_STUB)
+    for fn, (anchor, title) in STUBS.items():
+        with open(fn, "w", encoding="utf-8") as fh:
+            fh.write(stub(anchor, title))
     with open("sitemap.xml", "w", encoding="utf-8") as fh:
         fh.write(sitemap())
     with open("robots.txt", "w", encoding="utf-8") as fh:
@@ -608,7 +574,7 @@ def build():
     # never drops it. DNS (A + www CNAME) lives at Cloudflare (added 2026-07-23).
     with open("CNAME", "w", encoding="utf-8") as fh:
         fh.write(f"{DOMAIN}\n")
-    print("built:", ", ".join(PAGES), "+ sitemap.xml, robots.txt, CNAME")
+    print("built: index.html + redirect stubs:", ", ".join(STUBS), "+ sitemap.xml, robots.txt, CNAME")
 
 if __name__ == "__main__":
     build()
