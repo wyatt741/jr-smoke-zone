@@ -220,7 +220,10 @@ AMENITIES = [("wheel", "Wheelchair accessible"), ("card", "Accepts credit cards"
 # brands the shop carries (from their own IG posts). Elf Bar (flavored disposables) pulled
 # 2026-07-24 for California compliance: flavored vapes/disposables are illegal to sell at
 # retail in CA (SB 793), so we don't advertise them. Papers/dab brands are unaffected.
-BRANDS = ["Puffco", "Zig-Zag", "RAW"]
+# Real carried brands (owner-supplied 2026-07-26). SAFE only - CA-banned flavored brands
+# (Flum/Mello/Dojo/Hype/Max Flow disposables, Swisher/Backwoods flavored cigars) are NEVER listed.
+BRANDS = ["Puffco", "Zig-Zag", "RAW", "Zippo", "Clipper", "Santa Cruz Shredder",
+          "Empire Glassworks", "Formula 420", "Zyn"]
 
 # REAL public shout-out from a local business (IG post 2026-05-22), trimmed excerpt.
 # Not a customer review and not a rating - attributed + linked to the source post.
@@ -415,8 +418,9 @@ def home():
         f'<div class="feat bezel"><div class="bezel-in feat-in"><span class="ic-badge">{icon(k)}</span><h3>{t}</h3><p>{d}</p></div></div>'
         for k, t, d in FEATURES)
     # marquee: product keywords + real carried brands, rendered twice for a seamless loop
-    chips = ["Vapes", "E-Liquid", "Disposables", "Hookah", "Shisha", "Glass Pipes",
-             "Bongs", "Puffco", "Zig-Zag", "RAW", "Cigars", "Grinders", "Accessories"]
+    chips = ["Vapes", "E-Liquid", "Nicotine Pouches", "Zyn", "Hookah", "Shisha", "Glass Pipes",
+             "Empire Glassworks", "Bongs", "Puffco", "Zig-Zag", "RAW", "Cigars", "Grinders",
+             "Santa Cruz Shredder", "Zippo", "Formula 420", "Accessories"]
     row = "".join(f'<span class="mq-chip">{c}</span>' for c in chips)
     marquee = row + row
     igtiles = "".join(
