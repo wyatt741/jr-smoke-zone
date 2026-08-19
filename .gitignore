@@ -9,3 +9,6 @@ worker/.wrangler/
 
 # Claude Code local config (per-machine ECC trim)
 .claude/
+
+# internal read-first doc — keep OUT of the public repo (personal notes)
+CLAUDE.md
