@@ -6,3 +6,6 @@ Backups/
 
 .wrangler/
 worker/.wrangler/
+
+# Claude Code local config (per-machine ECC trim)
+.claude/
