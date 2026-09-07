@@ -12,3 +12,6 @@ worker/.wrangler/
 
 # internal read-first doc — keep OUT of the public repo (personal notes)
 CLAUDE.md
+
+# agent instruction pointer (mirrors the gitignored CLAUDE.md)
+AGENTS.md
